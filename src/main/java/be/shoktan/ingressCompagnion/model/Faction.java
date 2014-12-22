@@ -9,7 +9,7 @@ package be.shoktan.ingressCompagnion.model;
  */
 public enum Faction {
 	ENLIGHTED(Ownership.ENLIGHTED),
-	NEUTRAL(Ownership.NEUTRAL);
+	RESISTANCE(Ownership.RESISTANCE);
 	
 	private Ownership ownership;
 

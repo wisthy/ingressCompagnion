@@ -49,6 +49,10 @@ public class Agent {
 		this.codename = codename;
 		this.faction = faction;
 	}
+	
+	private Agent(){
+		
+	}
 
 	/**
 	 * @return the id
@@ -70,6 +74,42 @@ public class Agent {
 	public Faction getFaction() {
 		return faction;
 	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((codename == null) ? 0 : codename.hashCode());
+		result = prime * result + ((faction == null) ? 0 : faction.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Agent other = (Agent) obj;
+		if (codename == null) {
+			if (other.codename != null)
+				return false;
+		} else if (!codename.equals(other.codename))
+			return false;
+		if (faction != other.faction)
+			return false;
+		return true;
+	}
+	
 	
 	
 	

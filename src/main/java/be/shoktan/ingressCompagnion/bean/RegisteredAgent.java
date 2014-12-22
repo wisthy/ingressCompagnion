@@ -2,9 +2,7 @@ package be.shoktan.ingressCompagnion.bean;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.Table;
 
 import org.hibernate.validator.constraints.Email;
 
@@ -12,6 +10,7 @@ import be.shoktan.ingressCompagnion.model.Faction;
 import be.shoktan.ingressCompagnion.model.Trust;
 
 @Entity
+@Table(name="registered_agent")
 public class RegisteredAgent extends Agent {
 	// ==== are not supposed to change ====
 
@@ -26,7 +25,7 @@ public class RegisteredAgent extends Agent {
 
 
 	// ==== can change frequently      ====
-
+	@Column(name="trust_level")
 	private Trust trustLevel;
 
 

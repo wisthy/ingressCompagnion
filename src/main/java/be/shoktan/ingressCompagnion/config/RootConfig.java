@@ -17,7 +17,7 @@ import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @Configuration
-@ComponentScan(basePackages={"be.shoktan.ingressCompagnion.bean"},	excludeFilters={
+@ComponentScan(basePackages={"be.shoktan.ingressCompagnion.bean", "be.shoktan.ingressCompagnion.repository.hibernate"},	excludeFilters={
 		@Filter(type=FilterType.ANNOTATION, value=EnableWebMvc.class)})
 public class RootConfig {
 	//@Profile("development")
