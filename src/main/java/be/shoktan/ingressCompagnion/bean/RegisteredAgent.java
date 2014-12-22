@@ -76,4 +76,56 @@ public class RegisteredAgent extends Agent {
 
 
 	protected RegisteredAgent(){}
+
+
+
+
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + ((email == null) ? 0 : email.hashCode());
+		result = prime * result
+				+ ((trustLevel == null) ? 0 : trustLevel.hashCode());
+		return result;
+	}
+
+
+
+
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!super.equals(obj)) {
+			return false;
+		}
+		if (!(obj instanceof RegisteredAgent)) {
+			return false;
+		}
+		RegisteredAgent other = (RegisteredAgent) obj;
+		if (email == null) {
+			if (other.email != null) {
+				return false;
+			}
+		} else if (!email.equals(other.email)) {
+			return false;
+		}
+		if (trustLevel != other.trustLevel) {
+			return false;
+		}
+		return true;
+	}
+	
+	
+	
 }
