@@ -72,7 +72,7 @@ public class RegisteredAgentRepositoryTest {
 		String[] users = new String[]{"void", "TacTac"};
 		for(String user : users){
 			try{
-				repo.findByCodename("void");
+				repo.findByCodename(user);
 				fail("agent <"+user+"> shouldn't exist");
 			}catch(NotFoundException e){
 			}
@@ -96,5 +96,24 @@ public class RegisteredAgentRepositoryTest {
 		assertEquals(agent, saved);
 		assertEquals(size + 1, repo.count());
 		assertEquals(agent, repo.findOne(saved.getId()));
+	}
+	
+	@Test
+	@Transactional
+	public void saveExistingAgent(){
+		long id = 1L;
+		RegisteredAgent before = repo.findOne(id);
+		String oldEmail = before.getEmail();
+		assertEquals(AGENTS[0].getEmail(), oldEmail);
+		before.setEmail("more-Than-God@test.be");
+		RegisteredAgent after = repo.save(before);
+		assertEquals(before, after);
+		
+		RegisteredAgent refresh = repo.findOne(id);
+		
+		for(RegisteredAgent agent : new RegisteredAgent[]{after, refresh}){
+			assertEquals(new Long(id), after.getId());
+			assertEquals("more-Than-God@test.be", agent.getEmail());
+		}
 	}
 }

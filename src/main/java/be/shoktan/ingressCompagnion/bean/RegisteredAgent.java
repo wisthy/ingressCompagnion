@@ -59,6 +59,25 @@ public class RegisteredAgent extends Agent {
 	public String getEmail() {
 		return email;
 	}
+	
+	
+
+
+
+
+
+	/**
+	 * @param email the email to set
+	 */
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+
+
+
+
+	
 
 
 
@@ -69,6 +88,13 @@ public class RegisteredAgent extends Agent {
 	 */
 	public Trust getTrustLevel() {
 		return trustLevel;
+	}
+	
+	/**
+	 * @param trustLevel the trustLevel to set
+	 */
+	public void setTrustLevel(Trust trustLevel) {
+		this.trustLevel = trustLevel;
 	}
 
 

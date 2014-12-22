@@ -8,6 +8,8 @@ import javax.inject.Inject;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import be.shoktan.ingressCompagnion.bean.Agent;
@@ -17,17 +19,18 @@ import be.shoktan.ingressCompagnion.repository.RegisteredAgentRepository;
 
 @Repository
 public class RegisteredAgentHibernateRepository implements RegisteredAgentRepository{
-private SessionFactory sessionFactory;
-	
+	static final Logger logger = LoggerFactory.getLogger(RegisteredAgentHibernateRepository.class);
+	private SessionFactory sessionFactory;
+
 	@Inject
 	public RegisteredAgentHibernateRepository(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory; //<co id="co_InjectSessionFactory"/>
 	}
-	
+
 	private Session currentSession() {
 		return sessionFactory.getCurrentSession();//<co id="co_RetrieveCurrentSession"/>
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * @see be.shoktan.ingressCompagnion.repository.IRepository#count()
@@ -35,7 +38,7 @@ private SessionFactory sessionFactory;
 	public long count() {
 		return findAll().size();
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * @see be.shoktan.ingressCompagnion.repository.IRepository#save(java.lang.Object)
@@ -44,15 +47,21 @@ private SessionFactory sessionFactory;
 		Serializable id = currentSession().save(item); //<co id="co_UseCurrentSession"/>
 		return new RegisteredAgent((Long)id, item.getCodename(), item.getFaction(), item.getEmail(), item.getTrustLevel());
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * @see be.shoktan.ingressCompagnion.repository.IRepository#findOne(long)
 	 */
 	public RegisteredAgent findOne(long id) {
-		return (RegisteredAgent) currentSession().get(RegisteredAgent.class, id);
+		RegisteredAgent registeredAgent = (RegisteredAgent) currentSession().get(RegisteredAgent.class, id);
+		if(registeredAgent == null){
+			String message = "cannot find a Registered Agent with id <"+id+">";
+			logger.error(message);
+			throw new NotFoundException(RegisteredAgent.class, message);
+		}
+		return registeredAgent;
 	}
-	
+
 
 	/*
 	 * (non-Javadoc)
@@ -60,30 +69,40 @@ private SessionFactory sessionFactory;
 	 */
 	public RegisteredAgent findByCodename(String codename) {
 		@SuppressWarnings("unchecked")
-		List<RegisteredAgent> list = (List<RegisteredAgent>) currentSession()
-				.createCriteria(Agent.class, "agent")
-				.add(Restrictions.eq("codename", codename).ignoreCase())
-				.add(Restrictions.eq("agent.class", RegisteredAgent.class))
-				.list();
+		List<RegisteredAgent> list = currentSession()
+		.createCriteria(Agent.class, "agent")
+		.add(Restrictions.eq("codename", codename).ignoreCase())
+		.add(Restrictions.eq("agent.class", RegisteredAgent.class))
+		.list();
 		if(list.size() == 0){
-			throw new NotFoundException();
+			String message = "cannot find a Registered Agent with codename <"+codename+">";
+			logger.error(message);
+			throw new NotFoundException(RegisteredAgent.class, message);
 		}else{
 			return list.get(0);
 		}
 	}
-	
-	
-	
-	
+
+
+
+
 	/* (non-Javadoc)
 	 * @see be.shoktan.ingressCompagnion.repository.RegisteredAgentRepository#findByEmail(java.lang.String)
 	 */
 	@Override
 	public RegisteredAgent findByEmail(String email) throws NotFoundException {
-		return (RegisteredAgent) currentSession()
-				.createCriteria(RegisteredAgent.class)
-				.add(Restrictions.eq("email", email).ignoreCase())
-				.list().get(0);
+		@SuppressWarnings("unchecked")
+		List<RegisteredAgent> list = currentSession()
+		.createCriteria(RegisteredAgent.class)
+		.add(Restrictions.eq("email", email).ignoreCase())
+		.list();
+		if(list.size() == 0){
+			String message = "cannot find a Registered Agent with email <"+email+">";
+			logger.error(message);
+			throw new NotFoundException(RegisteredAgent.class, message);
+		}else{
+			return list.get(0);
+		}
 	}
 
 	@SuppressWarnings("unchecked")
