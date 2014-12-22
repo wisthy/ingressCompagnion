@@ -1,6 +1,3 @@
-/**
- * 
- */
 package be.shoktan.ingressCompagnion.repository.hibernate;
 
 import java.io.Serializable;
@@ -14,19 +11,16 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 import be.shoktan.ingressCompagnion.bean.Agent;
+import be.shoktan.ingressCompagnion.bean.RegisteredAgent;
 import be.shoktan.ingressCompagnion.exceptions.NotFoundException;
-import be.shoktan.ingressCompagnion.repository.AgentRepository;
+import be.shoktan.ingressCompagnion.repository.RegisteredAgentRepository;
 
-/**
- * @author wisthler
- *
- */
 @Repository
-public class AgentHibernateRepository implements AgentRepository {
-	private SessionFactory sessionFactory;
+public class RegisteredAgentHibernateRepository implements RegisteredAgentRepository{
+private SessionFactory sessionFactory;
 	
 	@Inject
-	public AgentHibernateRepository(SessionFactory sessionFactory) {
+	public RegisteredAgentHibernateRepository(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory; //<co id="co_InjectSessionFactory"/>
 	}
 	
@@ -46,29 +40,30 @@ public class AgentHibernateRepository implements AgentRepository {
 	 * (non-Javadoc)
 	 * @see be.shoktan.ingressCompagnion.repository.IRepository#save(java.lang.Object)
 	 */
-	public Agent save(Agent item) {
+	public RegisteredAgent save(RegisteredAgent item) {
 		Serializable id = currentSession().save(item); //<co id="co_UseCurrentSession"/>
-		
-		return new Agent((Long)id, item.getCodename(), item.getFaction());
+		return new RegisteredAgent((Long)id, item.getCodename(), item.getFaction(), item.getEmail(), item.getTrustLevel());
 	}
 	
 	/*
 	 * (non-Javadoc)
 	 * @see be.shoktan.ingressCompagnion.repository.IRepository#findOne(long)
 	 */
-	public Agent findOne(long id) {
-		return (Agent) currentSession().get(Agent.class, id);
+	public RegisteredAgent findOne(long id) {
+		return (RegisteredAgent) currentSession().get(RegisteredAgent.class, id);
 	}
 	
+
 	/*
 	 * (non-Javadoc)
-	 * @see be.shoktan.ingressCompagnion.repository.AgentRepository#findByCodename(java.lang.String)
+	 * @see be.shoktan.ingressCompagnion.repository.RegisteredAgentRepository#findByCodename(java.lang.String)
 	 */
-	public Agent findByCodename(String codename) {
+	public RegisteredAgent findByCodename(String codename) {
 		@SuppressWarnings("unchecked")
-		List<Agent> list = (List<Agent>)currentSession()
-				.createCriteria(Agent.class)
+		List<RegisteredAgent> list = (List<RegisteredAgent>) currentSession()
+				.createCriteria(Agent.class, "agent")
 				.add(Restrictions.eq("codename", codename))
+				.add(Restrictions.eq("agent.class", RegisteredAgent.class))
 				.list();
 		if(list.size() == 0){
 			throw new NotFoundException();
@@ -78,13 +73,26 @@ public class AgentHibernateRepository implements AgentRepository {
 	}
 	
 	
+	
+	
+	/* (non-Javadoc)
+	 * @see be.shoktan.ingressCompagnion.repository.RegisteredAgentRepository#findByEmail(java.lang.String)
+	 */
+	@Override
+	public RegisteredAgent findByEmail(String email) throws NotFoundException {
+		return (RegisteredAgent) currentSession()
+				.createCriteria(RegisteredAgent.class)
+				.add(Restrictions.eq("email", email))
+				.list().get(0);
+	}
+
 	@SuppressWarnings("unchecked")
 	/*
 	 * (non-Javadoc)
 	 * @see be.shoktan.ingressCompagnion.repository.IRepository#findAll()
 	 */
-	public List<Agent> findAll() {
-		return (List<Agent>) currentSession()
-				.createCriteria(Agent.class).list();
+	public List<RegisteredAgent> findAll() {
+		return (List<RegisteredAgent>) currentSession()
+				.createCriteria(RegisteredAgent.class).list();
 	}
 }

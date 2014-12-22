@@ -50,7 +50,7 @@ public class Agent {
 		this.faction = faction;
 	}
 	
-	private Agent(){
+	protected Agent(){
 		
 	}
 
@@ -97,7 +97,7 @@ public class Agent {
 			return true;
 		if (obj == null)
 			return false;
-		if (getClass() != obj.getClass())
+		if (!(obj instanceof Agent))
 			return false;
 		Agent other = (Agent) obj;
 		if (codename == null) {

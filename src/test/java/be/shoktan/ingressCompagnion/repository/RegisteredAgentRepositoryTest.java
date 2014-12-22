@@ -15,27 +15,28 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import be.shoktan.ingressCompagnion.bean.Agent;
+import be.shoktan.ingressCompagnion.bean.RegisteredAgent;
 import be.shoktan.ingressCompagnion.config.RepositoryTestConfig;
 import be.shoktan.ingressCompagnion.exceptions.NotFoundException;
 import be.shoktan.ingressCompagnion.model.Faction;
+import be.shoktan.ingressCompagnion.model.Trust;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = RepositoryTestConfig.class)
-public class AgentRepositoryTest {
+public class RegisteredAgentRepositoryTest {
 
 	@Autowired
-	AgentRepository agentRepository;
+	RegisteredAgentRepository repo;
 	
-	private static Agent[] AGENTS = new Agent[3];
+	private static RegisteredAgent[] AGENTS = new RegisteredAgent[2];
 	
 	@BeforeClass
 	public static void before(){
-		AGENTS[0] = new Agent(1L, "God", Faction.RESISTANCE);
-		AGENTS[1] = new Agent(2L, "Second", Faction.RESISTANCE);
-		AGENTS[2] = new Agent(3L, "TacTac", Faction.ENLIGHTED);
+		AGENTS[0] = new RegisteredAgent(1L, "God", Faction.RESISTANCE, "god@test.be", Trust.ADMIN);
+		AGENTS[1] = new RegisteredAgent(2L, "Second", Faction.RESISTANCE, "second@test.be", Trust.SEMI_TRUSTED);
 	}
-	private static void assertAgent(int index, Agent actual){
-		Agent expected = AGENTS[index];
+	private static void assertAgent(int index, RegisteredAgent actual){
+		RegisteredAgent expected = AGENTS[index];
 		assertEquals(expected, actual);
 	}
 	
@@ -45,13 +46,13 @@ public class AgentRepositoryTest {
 	@Test
 	@Transactional
 	public void count() {
-		assertEquals(AGENTS.length, agentRepository.count());
+		assertEquals(AGENTS.length, repo.count());
 	}
 	
 	@Test
 	@Transactional
 	public void findAll(){
-		List<Agent> all = agentRepository.findAll();
+		List<RegisteredAgent> all = repo.findAll();
 		assertEquals(AGENTS.length, all.size());
 		for(int i = 0; i < AGENTS.length; i++){
 			assertEquals(AGENTS[i], all.get(i));
@@ -61,37 +62,39 @@ public class AgentRepositoryTest {
 	@Test
 	@Transactional
 	public void findByCodename(){
-		assertAgent(0, agentRepository.findByCodename("God"));
-		assertAgent(1, agentRepository.findByCodename("Second"));
+		assertAgent(0, repo.findByCodename("God"));
+		assertAgent(1, repo.findByCodename("Second"));
 	}
 	
 	@Test
 	@Transactional
 	public void findByCodenameNotFound(){
-		try{
-			agentRepository.findByCodename("void");
-			fail("this agent doesn't exist");
-		}catch(NotFoundException e){
-			
+		String[] users = new String[]{"void", "TacTac"};
+		for(String user : users){
+			try{
+				repo.findByCodename("void");
+				fail("agent <"+user+"> shouldn't exist");
+			}catch(NotFoundException e){
+			}
 		}
 	}
 	
 	@Test
 	@Transactional
 	public void findOne(){
-		assertAgent(0, agentRepository.findOne(1L));
-		assertAgent(1, agentRepository.findOne(2L));
+		assertAgent(0, repo.findOne(1L));
+		assertAgent(1, repo.findOne(2L));
 	}
 	
 	@Test
 	@Transactional
 	public void saveNewAgent(){
 		int size = AGENTS.length;
-		assertEquals(size, agentRepository.count());
-		Agent agent = new Agent(null, "newbee", Faction.ENLIGHTED);
-		Agent saved = agentRepository.save(agent);
+		assertEquals(size, repo.count());
+		RegisteredAgent agent = new RegisteredAgent(null, "newbee", Faction.ENLIGHTED, "newbee@test.be", Trust.NONE);
+		RegisteredAgent saved = repo.save(agent);
 		assertEquals(agent, saved);
-		assertEquals(size + 1, agentRepository.count());
-		assertEquals(agent, agentRepository.findOne(size + 1));
+		assertEquals(size + 1, repo.count());
+		assertEquals(agent, repo.findOne(saved.getId()));
 	}
 }

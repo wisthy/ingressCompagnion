@@ -6,6 +6,7 @@ create table agent (
 
 create table registered_agent(
 	id identity,
-	email varchar(30),
-	trust_level varchar(30)
+	email varchar(30) not null,
+	trust_level varchar(30),
+	foreign key (id) references agent(id)
 );
