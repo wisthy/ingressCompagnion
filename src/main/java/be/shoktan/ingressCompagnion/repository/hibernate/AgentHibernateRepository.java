@@ -68,7 +68,7 @@ public class AgentHibernateRepository implements AgentRepository {
 		@SuppressWarnings("unchecked")
 		List<Agent> list = (List<Agent>)currentSession()
 				.createCriteria(Agent.class)
-				.add(Restrictions.eq("codename", codename))
+				.add(Restrictions.eq("codename", codename).ignoreCase())
 				.list();
 		if(list.size() == 0){
 			throw new NotFoundException();

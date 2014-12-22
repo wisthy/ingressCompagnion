@@ -67,6 +67,14 @@ public class AgentRepositoryTest {
 	
 	@Test
 	@Transactional
+	public void findByCodenameShouldBeCaseInsensitive(){
+		for(String name : new String[]{"God", "god", "GOD"}){
+			assertAgent(0, agentRepository.findByCodename(name));
+		}
+	}
+	
+	@Test
+	@Transactional
 	public void findByCodenameNotFound(){
 		try{
 			agentRepository.findByCodename("void");

@@ -62,7 +62,7 @@ private SessionFactory sessionFactory;
 		@SuppressWarnings("unchecked")
 		List<RegisteredAgent> list = (List<RegisteredAgent>) currentSession()
 				.createCriteria(Agent.class, "agent")
-				.add(Restrictions.eq("codename", codename))
+				.add(Restrictions.eq("codename", codename).ignoreCase())
 				.add(Restrictions.eq("agent.class", RegisteredAgent.class))
 				.list();
 		if(list.size() == 0){
@@ -82,7 +82,7 @@ private SessionFactory sessionFactory;
 	public RegisteredAgent findByEmail(String email) throws NotFoundException {
 		return (RegisteredAgent) currentSession()
 				.createCriteria(RegisteredAgent.class)
-				.add(Restrictions.eq("email", email))
+				.add(Restrictions.eq("email", email).ignoreCase())
 				.list().get(0);
 	}
 
