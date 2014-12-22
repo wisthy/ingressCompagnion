@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import be.shoktan.ingressCompagnion.bean.Agent;
 import be.shoktan.ingressCompagnion.bean.RegisteredAgent;
 import be.shoktan.ingressCompagnion.config.RepositoryTestConfig;
 import be.shoktan.ingressCompagnion.exceptions.NotFoundException;
@@ -113,7 +113,9 @@ public class RegisteredAgentRepositoryTest {
 		
 		for(RegisteredAgent agent : new RegisteredAgent[]{after, refresh}){
 			assertEquals(new Long(id), after.getId());
-			assertEquals("more-Than-God@test.be", agent.getEmail());
+			String email = agent.getEmail();
+			Assert.assertNotEquals(oldEmail, email);
+			assertEquals("more-Than-God@test.be", email);
 		}
 	}
 }
