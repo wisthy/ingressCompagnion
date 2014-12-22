@@ -100,6 +100,7 @@ public class AgentRepositoryTest {
 		Agent saved = agentRepository.save(agent);
 		assertEquals(agent, saved);
 		assertEquals(size + 1, agentRepository.count());
-		assertEquals(agent, agentRepository.findOne(size + 1));
+		assertEquals(new Long(size + 1), saved.getId());
+		assertEquals(agent, agentRepository.findOne(saved.getId()));
 	}
 }
