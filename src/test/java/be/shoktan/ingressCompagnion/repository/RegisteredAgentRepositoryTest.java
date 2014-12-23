@@ -95,7 +95,6 @@ public class RegisteredAgentRepositoryTest {
 		RegisteredAgent saved = repo.save(agent);
 		assertEquals(agent, saved);
 		assertEquals(size + 1, repo.count());
-		assertEquals(new Long(size + 1), saved.getId());
 		assertEquals(agent, repo.findOne(saved.getId()));
 	}
 	
