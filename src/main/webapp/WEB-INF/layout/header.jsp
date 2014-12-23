@@ -1,5 +1,5 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="s" %>
-<a href="<s:url value="/" />">
-	<h1>Ingress Compagnion</h1>
-</a>
+<h1>
+	<a href="<s:url value="/" />">Ingress Compagnion</a>
+</h1>
 <hr/>
