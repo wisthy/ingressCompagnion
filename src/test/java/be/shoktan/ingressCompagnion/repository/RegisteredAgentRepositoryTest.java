@@ -98,6 +98,7 @@ public class RegisteredAgentRepositoryTest {
 		assertEquals(agent, repo.findOne(saved.getId()));
 	}
 	
+	
 	@Test
 	@Transactional
 	public void saveExistingAgent(){
