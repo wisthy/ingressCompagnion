@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.springframework.test.web.servlet.MockMvc;
 
 import be.shoktan.ingressCompagnion.bean.Agent;
+import be.shoktan.ingressCompagnion.exceptions.NotFoundException;
 import be.shoktan.ingressCompagnion.model.Faction;
 import be.shoktan.ingressCompagnion.repository.AgentRepository;
 import static org.mockito.Mockito.*;
@@ -36,5 +37,17 @@ public class AgentControllerTest {
 			.andExpect(model().attributeExists("agent"))
 			.andExpect(model().attribute("agent", clone));
 		}
+	}
+	
+	@Test
+	public void should404onShowProfile() throws Exception{
+		AgentRepository repo = mock(AgentRepository.class);
+		when(repo.findByCodename("void")).thenThrow(new NotFoundException(Agent.class, "no agent with codename void"));
+		
+		AgentController control = new AgentController(repo);
+		MockMvc mockMvc = standaloneSetup(control).build();
+		
+		mockMvc.perform(get("/agent/void"))
+			.andExpect(status().is(404));
 	}
 }
