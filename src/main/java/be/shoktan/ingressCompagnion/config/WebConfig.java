@@ -13,7 +13,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import org.thymeleaf.spring4.SpringTemplateEngine;
 import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
-import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
 import org.thymeleaf.templateresolver.TemplateResolver;
 
 @Configuration
@@ -24,6 +23,7 @@ public class WebConfig extends WebMvcConfigurerAdapter{
 	
 	@Bean
 	public ViewResolver viewResolver(SpringTemplateEngine engine){
+		logger.warn(":: trace 42");
 		ThymeleafViewResolver vr = new ThymeleafViewResolver();
 		vr.setTemplateEngine(engine);
 		return vr;
