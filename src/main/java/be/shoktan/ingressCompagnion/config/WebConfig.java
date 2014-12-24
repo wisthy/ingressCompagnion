@@ -2,47 +2,51 @@ package be.shoktan.ingressCompagnion.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.tiles3.TilesConfigurer;
-import org.springframework.web.servlet.view.tiles3.TilesViewResolver;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.spring4.SpringTemplateEngine;
+import org.thymeleaf.spring4.view.ThymeleafViewResolver;
+import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
+import org.thymeleaf.templateresolver.TemplateResolver;
 
 @Configuration
 @EnableWebMvc
 @ComponentScan("be.shoktan.ingressCompagnion.web")
 public class WebConfig extends WebMvcConfigurerAdapter{
-	static final Logger logger = LoggerFactory.getLogger(WebConfig.class);
-
-//	@Bean
-//    public ViewResolver viewResolver() {
-//        UrlBasedViewResolver viewResolver = new UrlBasedViewResolver();
-//        viewResolver.setViewClass(TilesView.class);
-//        viewResolver.setOrder(0);
-//        return viewResolver;
-//    }
-	
+	static final Logger logger = LoggerFactory.getLogger(WebConfig.class);	
 	
 	@Bean
-	public ViewResolver viewResolverTiles(){
-		ViewResolver vr = new TilesViewResolver();
-		logger.info("trace here");
+	public ViewResolver viewResolver(SpringTemplateEngine engine){
+		ThymeleafViewResolver vr = new ThymeleafViewResolver();
+		vr.setTemplateEngine(engine);
 		return vr;
 	}
-
+	
 	@Bean
-	public MessageSource messageSource(){
-		ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
-		messageSource.setBasename("messages");
-		return messageSource;
+	public TemplateEngine templateEngine(TemplateResolver resolver){
+		SpringTemplateEngine engine = new SpringTemplateEngine();
+		engine.setTemplateResolver(resolver);
+		return engine;
 	}
+	
+	@Bean
+	public TemplateResolver templateResolver(){
+		TemplateResolver resolver = new ServletContextTemplateResolver();
+		resolver.setPrefix("/templates/");
+		resolver.setSuffix(".html");
+		resolver.setTemplateMode("HTML5");
+		return resolver;
+	}
+
+	
 
 	/* (non-Javadoc)
 	 * @see org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter#configureDefaultServletHandling(org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer)
@@ -50,14 +54,6 @@ public class WebConfig extends WebMvcConfigurerAdapter{
 	@Override
 	public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
 		configurer.enable();
-	}
-
-	@Bean
-	public TilesConfigurer tilesConfigurer(){
-		TilesConfigurer tiles = new TilesConfigurer();
-		tiles.setDefinitions("/WEB-INF/layout/tiles.xml");
-		tiles.setCheckRefresh(true);
-		return tiles;
 	}
 
 	/*

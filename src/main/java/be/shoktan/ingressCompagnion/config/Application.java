@@ -8,6 +8,6 @@ import org.springframework.context.annotation.ComponentScan;
 @EnableAutoConfiguration
 public class Application {
 	public static void main(String[] args) throws Throwable {
-        SpringApplication.run(Application.class, args);
-    }
+		SpringApplication.run(Application.class, args);
+	}
 }
