@@ -33,7 +33,7 @@ public class AgentControllerTest {
 		String[] names = new String[]{"Bob", "bob", "BOB"};
 		for(String name : names){
 			mockMvc.perform(get("/agent/"+name))
-			.andExpect(view().name("profile"))
+			.andExpect(view().name("agent_profile"))
 			.andExpect(model().attributeExists("agent"))
 			.andExpect(model().attribute("agent", clone));
 		}

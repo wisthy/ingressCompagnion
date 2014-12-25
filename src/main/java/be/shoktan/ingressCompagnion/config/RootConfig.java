@@ -28,16 +28,14 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 public class RootConfig {
 	static final Logger logger = LoggerFactory.getLogger(RootConfig.class);
 	
-	@Profile(value = "development")
-	@Bean
-	public DataSource embeddedDataSource(){
-		return new EmbeddedDatabaseBuilder()
-		.setType(EmbeddedDatabaseType.H2)
-		//.addScript("schema.sql")
-		//.addScript("test-data.sql")
-		.build();
-	}
-	
+//	@Profile(value = "development")
+//	@Bean
+//	public DataSource embeddedDataSource(){
+//		return new EmbeddedDatabaseBuilder()
+//		.setType(EmbeddedDatabaseType.H2)
+//		.build();
+//	}
+//	
 	@Profile(value = "localhost")
 	@Bean
 	public DataSource postgressDataSource(){
@@ -49,17 +47,29 @@ public class RootConfig {
 		return bean;
 	}
 
+	@Profile(value = "localhost")
 	@Bean
 	public LocalSessionFactoryBean sessionFactory(DataSource dataSource){
-		logger.warn(":: trace 42");
 		LocalSessionFactoryBean sfb = new LocalSessionFactoryBean();
 		sfb.setDataSource(dataSource);
 		sfb.setPackagesToScan("be.shoktan.ingressCompagnion.bean");
 		Properties props = new Properties();
-		props.setProperty("dialect", "org.hibernate.H2Dialect");
+		props.setProperty("dialect", "org.hibernate.dialect.PostgreSQLDialect");
 		sfb.setHibernateProperties(props);
 		return sfb;
 	}
+	
+//	@Profile(value = "development")
+//	@Bean
+//	public LocalSessionFactoryBean sessionFactoryH2(DataSource dataSource){
+//		LocalSessionFactoryBean sfb = new LocalSessionFactoryBean();
+//		sfb.setDataSource(dataSource);
+//		sfb.setPackagesToScan("be.shoktan.ingressCompagnion.bean");
+//		Properties props = new Properties();
+//		props.setProperty("dialect", "org.hibernate.H2Dialect");
+//		sfb.setHibernateProperties(props);
+//		return sfb;
+//	}
 
 	@Bean
 	public BeanPostProcessor persistenceTranslation(){

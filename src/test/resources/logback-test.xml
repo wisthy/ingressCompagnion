@@ -10,7 +10,7 @@
 
 	<logger name="be.shoktan" level="debug"/>
 
-	<root level="warn">
+	<root level="debug">
 		<appender-ref ref="STDOUT" />
 	</root>
 </configuration>

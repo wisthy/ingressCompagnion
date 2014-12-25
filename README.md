@@ -7,7 +7,7 @@ Short list of commands:
 | Command | Description |
 | --- | --- |
 | `mvn spring-boot:run` | run the application (on localhost:8080)|
-| `mvn test` | run all the tests |
+| `mvn test -Dspring.profiles.active="junit"` | run all the tests |
 | `mvn package` | export the project as a `WAR` | 
 
 
