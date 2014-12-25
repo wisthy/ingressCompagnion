@@ -36,8 +36,11 @@
 		<div class="container">
 			<h1>Agent profile</h1>
 			<hr/>
-			<span th:text="${agent.codename}">codename</span><br/>
-			<span th:text="${agent.faction}">faction</span><br/>
+			<ul>
+				<li>Codename: <span th:text="${agent.getCodename()}">codename</span></li>
+				<li>Faction: <span th:text="${agent.getFaction()}">faction</span></li>
+			</ul>
+			<br/>
 		</div>
 		
 		<div th:replace="fragments/footer :: footer">&copy; 2014 The Static Templates</div>

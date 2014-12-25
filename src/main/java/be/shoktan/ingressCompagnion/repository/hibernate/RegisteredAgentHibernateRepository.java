@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -17,6 +18,7 @@ import be.shoktan.ingressCompagnion.bean.RegisteredAgent;
 import be.shoktan.ingressCompagnion.exceptions.NotFoundException;
 import be.shoktan.ingressCompagnion.repository.RegisteredAgentRepository;
 
+@Transactional
 @Repository
 public class RegisteredAgentHibernateRepository implements RegisteredAgentRepository{
 	static final Logger logger = LoggerFactory.getLogger(RegisteredAgentHibernateRepository.class);

@@ -7,6 +7,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.transaction.Transactional;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -23,6 +24,7 @@ import be.shoktan.ingressCompagnion.repository.AgentRepository;
  * @author wisthler
  *
  */
+@Transactional
 @Repository
 public class AgentHibernateRepository implements AgentRepository {
 	static final Logger logger = LoggerFactory.getLogger(AgentHibernateRepository.class);

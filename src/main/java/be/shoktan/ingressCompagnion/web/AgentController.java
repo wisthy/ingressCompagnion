@@ -1,5 +1,7 @@
 package be.shoktan.ingressCompagnion.web;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +20,7 @@ import be.shoktan.ingressCompagnion.repository.AgentRepository;
 @Controller
 @RequestMapping("/agent")
 public class AgentController {
+	static final Logger logger = LoggerFactory.getLogger(AgentController.class);
 	private AgentRepository repository;
 	
 	@Autowired
@@ -28,7 +31,8 @@ public class AgentController {
 	@RequestMapping(value="/{codename}", method=RequestMethod.GET)
 	public String showAgentProfile(@PathVariable String codename, Model model){
 		Agent agent = repository.findByCodename(codename);
-		model.addAttribute(agent);
-		return "profile";
+		if(logger.isDebugEnabled())logger.debug("agent found: "+agent);
+		model.addAttribute("agent", agent);
+		return "agent_profile";
 	}
 }

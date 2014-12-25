@@ -30,9 +30,6 @@ public class RegisteredAgent extends Agent {
 	@Column(name="trust_level")
 	@Enumerated(EnumType.STRING)
 	private Trust trustLevel;
-
-
-
 	
 	
 	/**
@@ -150,6 +147,30 @@ public class RegisteredAgent extends Agent {
 			return false;
 		}
 		return true;
+	}
+
+
+
+
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("RegisteredAgent [getId()=");
+		builder.append(getId());
+		builder.append(", getCodename()=");
+		builder.append(getCodename());
+		builder.append(", getFaction()=");
+		builder.append(getFaction());
+		builder.append(", email=");
+		builder.append(email);
+		builder.append(", trustLevel=");
+		builder.append(trustLevel);
+		builder.append("]");
+		return builder.toString();
 	}
 	
 	

@@ -12,10 +12,15 @@ import javax.persistence.InheritanceType;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import be.shoktan.ingressCompagnion.model.Faction;
 
 @Entity @Inheritance(strategy=InheritanceType.JOINED)
 public class Agent {
+	static final Logger logger = LoggerFactory.getLogger(Agent.class);
+	
 	// ==== are not supposed to change ====
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -65,6 +70,7 @@ public class Agent {
 	 * @return the codename
 	 */
 	public String getCodename() {
+		if(logger.isDebugEnabled())logger.debug("getCodename():: "+codename);
 		return codename;
 	}
 
@@ -108,6 +114,22 @@ public class Agent {
 		if (faction != other.faction)
 			return false;
 		return true;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Agent [id=");
+		builder.append(id);
+		builder.append(", codename=");
+		builder.append(codename);
+		builder.append(", faction=");
+		builder.append(faction);
+		builder.append("]");
+		return builder.toString();
 	}
 	
 	

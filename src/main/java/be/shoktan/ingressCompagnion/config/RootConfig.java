@@ -13,27 +13,40 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.type.filter.RegexPatternTypeFilter;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
+import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @Configuration
-@EnableTransactionManagement
 @ComponentScan(basePackages={"be.shoktan.ingressCompagnion.bean", "be.shoktan.ingressCompagnion.repository.hibernate"},	excludeFilters={
 		@Filter(type=FilterType.ANNOTATION, value=EnableWebMvc.class)})
 public class RootConfig {
 	static final Logger logger = LoggerFactory.getLogger(RootConfig.class);
 	
-	//@Profile("development")
+	@Profile(value = "development")
 	@Bean
 	public DataSource embeddedDataSource(){
 		return new EmbeddedDatabaseBuilder()
 		.setType(EmbeddedDatabaseType.H2)
+		//.addScript("schema.sql")
+		//.addScript("test-data.sql")
 		.build();
+	}
+	
+	@Profile(value = "localhost")
+	@Bean
+	public DataSource postgressDataSource(){
+		org.postgresql.Driver driver = new org.postgresql.Driver();
+		String connectionString = "jdbc:postgresql://localhost/ingressCompagnion";
+		String login = "ingressComp";
+		String password = "ingressCompagnion";
+		SimpleDriverDataSource bean = new SimpleDriverDataSource(driver, connectionString, login, password);
+		return bean;
 	}
 
 	@Bean
