@@ -1,13 +1,21 @@
 package be.shoktan.ingressCompagnion.web;
 
+import static org.hamcrest.Matchers.hasItem;
 import static org.mockito.Mockito.mock;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 
 import be.shoktan.ingressCompagnion.bean.Agent;
+import be.shoktan.ingressCompagnion.bean.RegisteredAgent;
 import be.shoktan.ingressCompagnion.exceptions.NotFoundException;
 import be.shoktan.ingressCompagnion.model.Faction;
+import be.shoktan.ingressCompagnion.model.Trust;
 import be.shoktan.ingressCompagnion.repository.AgentRepository;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -32,7 +40,7 @@ public class AgentControllerTest {
 		
 		String[] names = new String[]{"Bob", "bob", "BOB"};
 		for(String name : names){
-			mockMvc.perform(get("/agent/"+name))
+			mockMvc.perform(get("/agent/profile/"+name))
 			.andExpect(view().name("agent_profile"))
 			.andExpect(model().attributeExists("agent"))
 			.andExpect(model().attribute("agent", clone));
@@ -47,7 +55,35 @@ public class AgentControllerTest {
 		AgentController control = new AgentController(repo);
 		MockMvc mockMvc = standaloneSetup(control).build();
 		
-		mockMvc.perform(get("/agent/void"))
+		mockMvc.perform(get("/agent/profile/void"))
 			.andExpect(status().is(404));
+	}
+	
+	@Test
+	public void shouldShowAllAgents() throws Exception {
+		List<Agent> saved = new ArrayList<Agent>();
+		Agent bob = new Agent(1L, "Bob", Faction.RESISTANCE);
+		Agent tul = new Agent(2L, "Tul", Faction.ENLIGHTED);
+		Agent koin = new RegisteredAgent(3L, "koin", Faction.RESISTANCE, "koin@test.be", Trust.ADMIN);
+		saved.add(bob);
+		saved.add(tul);
+		saved.add(koin);
+		
+		AgentRepository repo = mock(AgentRepository.class);
+		when(repo.findAll()).thenReturn(saved);
+		
+		AgentController control = new AgentController(repo);
+		MockMvc mockMvc = standaloneSetup(control).build();
+		
+		ResultActions result = mockMvc.perform(get("/agent/list"))
+			.andExpect(view().name("agents"))
+			.andExpect(model().attributeExists("agents"))
+			.andExpect(model().attribute("agents", Matchers.contains(saved.toArray())));
+		
+		for(Agent a : saved){
+			result.andExpect(model().attribute("agents", hasItem(a)));
+		}
+		
+		//.andExpect(model().attribute("spittleList", Matchers.contains(expectedSpittles.toArray())));
 	}
 }

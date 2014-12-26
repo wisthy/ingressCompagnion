@@ -3,3 +3,20 @@ body {
 	padding-bottom: 40px;
 	background-color: #f5f5f5;
 }
+
+table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 15px;
+}
+
+tr.RESISTANCE td{
+	background-color: cyan;
+}
+
+tr.ENLIGHTED td{
+	background-color: lime;
+}
