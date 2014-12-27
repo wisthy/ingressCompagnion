@@ -1,0 +1,24 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+	<link rel="stylesheet" type="text/css" th:href="@{/resources/style.css}"></link>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<link href="http://cdn.jsdelivr.net/webjars/bootstrap/3.2.0/css/bootstrap.min.css"
+			th:href="@{/webjars/bootstrap/3.2.0/css/bootstrap.min.css}"
+			rel="stylesheet" media="screen"></link>
+	<script src="http://cdn.jsdelivr.net/webjars/jquery/2.1.1/jquery.min.js"
+			th:src="@{/webjars/jquery/2.1.1/jquery.min.js}"></script>
+</head>
+<body>
+	<fieldset th:if="${agent.isRegistered()}" th:fragment="registeredAgent">
+		<legend th:text="#{agent.section.registered}">Registered info</legend>
+		<ul>
+			<li>
+				<span th:text="#{message.label(#{agent.email})}">Email:</span>
+				<span th:text="${agent.getEmail()}">tata@titi.toto</span>
+			</li>
+		</ul>
+	</fieldset>
+</body>
+</html>

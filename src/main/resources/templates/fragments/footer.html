@@ -4,6 +4,22 @@
 	<link rel="stylesheet" type="text/css" th:href="@{/resources/style.css}"></link>
 </head>
 <body>
-	<div th:fragment="footer">- &copy; 2014 Footer -</div>
+	<div th:fragment="footer" id="footer">
+		<hr/>
+		<ul>
+			<li sec:authorize="isAuthenticated()"> 
+				<span th:text="#{message.agent}">Agent</span>
+				<span sec:authentication="name">name</span>
+			</li>
+			<li sec:authorize="isAuthenticated()"> 
+				<form th:action="@{/logout}" method="POST">
+					<input type="submit" th:value="#{message.logout}"/>
+				</form>
+			</li>
+			<li sec:authorize="not isAuthenticated()" th:text="#{message.anonyme}">
+				Annonymous
+			</li>
+		</ul>
+	</div>
 </body>
 </html>

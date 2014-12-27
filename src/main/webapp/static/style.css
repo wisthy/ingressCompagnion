@@ -137,3 +137,15 @@ legend{
 	background-color: #28f428;
 	height: 5px;
 }
+
+#footer ul li {
+	display: inline;
+	list-style-type: none;
+	padding-right: 20px;
+}
+
+#footer hr{
+	color: #ebbc4a;
+	background-color: #ebbc4a;
+	height: 5px;
+}

@@ -44,7 +44,7 @@
 				</tr>
 				<tr th:each="agent : ${agents}" th:class="${agent.getFaction()}">
 					<td>
-						<a href="agent/profile" th:href="@{|/agent/profile/${agent.getCodename()}|}" th:text="${agent.getCodename()}">John Smith</a> 
+						<a href="agent/profile" th:href="@{|/agent/show/${agent.getCodename()}|}" th:text="${agent.getCodename()}">John Smith</a> 
 					</td>
 					
 					<td th:text="#{|faction.${agent.getFaction()}|}">The best faction</td>

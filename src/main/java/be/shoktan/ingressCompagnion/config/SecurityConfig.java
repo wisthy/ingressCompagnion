@@ -71,7 +71,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 						.and()
 					.attribute("lastname")
 						.type("http://axschema.org/namePerson/last")
-						.required(true);
+						.required(true)
+						.and()
+					.and()
+				.and()
+			.logout()
+//				.logoutSuccessUrl("/")
+//				.logoutUrl("/logout")
+				;
+					
 
 	}
 

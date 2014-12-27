@@ -41,28 +41,12 @@
 			<h1 th:text="#{agent.title(${agent.getCodename()})}">Agent
 				profile</h1>
 			<hr></hr>
-			<fieldset>
-				<legend th:text="#{agent.section.basic}">Basic info</legend>
-				<ul>
-					<li>
-						<span th:text="#{message.label(#{agent.codename})}">Codename:</span> 
-						<span th:text="${agent.getCodename()}">value</span>
-					</li>
-					<li>
-						<span th:text="#{message.label(#{agent.faction})}">Faction:</span> 
-						<span th:text="#{|faction.${agent.getFaction()}|}">value</span>
-					</li>
-				</ul>
+			<fieldset th:replace="fragments/agent/baseAgent :: baseAgent">
+				Basic Agent info goes there
 			</fieldset>
 			<br></br>
-			<fieldset th:if="${agent.isRegistered()}">
-				<legend th:text="#{agent.section.registered}">Registered info</legend>
-				<ul>
-					<li>
-						<span th:text="#{message.label(#{agent.email})}">Email:</span>
-						<span th:text="${agent.getEmail()}">tata@titi.toto</span>
-					</li>
-				</ul>
+			<fieldset th:if="${agent.isRegistered()}" th:replace="fragments/agent/registeredAgent :: registeredAgent">
+				Extended info goes here
 			</fieldset>
 		</div>
 	</div>

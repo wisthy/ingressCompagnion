@@ -1,5 +1,6 @@
 package be.shoktan.ingressCompagnion.web;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -30,8 +31,15 @@ public class AgentController {
 		this.repository = agentRepository;
 	}
 	
-	@RequestMapping(value="/profile/{codename}", method=RequestMethod.GET)
-	public String showAgentProfile(@PathVariable String codename, Model model){
+	@RequestMapping(value="/show", method=RequestMethod.GET)
+	public String showProfile(Principal userPrincipal, Model model){
+		String name = userPrincipal.getName();
+		if(logger.isDebugEnabled())logger.debug("showProfile():: "+name);
+		return "redirect:/agent/show/"+name;
+	}
+	
+	@RequestMapping(value="/show/{codename}", method=RequestMethod.GET)
+	public String showAgent(@PathVariable String codename, Model model){
 		Agent agent = repository.findByCodename(codename);
 		if(logger.isDebugEnabled())logger.debug("agent found: "+agent);
 		model.addAttribute("agent", agent);
@@ -39,10 +47,12 @@ public class AgentController {
 	}
 	
 	@RequestMapping(value="/list", method=RequestMethod.GET)
-	public String showAllAgents(Model model){
+	public String showAgentsList(Model model){
 		List<Agent> agents = repository.findAll();
 		if(logger.isDebugEnabled())logger.debug("#"+agents.size()+" agents found");
 		model.addAttribute("agents", agents);
 		return "agents";
 	}
+	
+	
 }

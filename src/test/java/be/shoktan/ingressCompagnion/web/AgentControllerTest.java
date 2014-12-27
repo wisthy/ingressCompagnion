@@ -40,7 +40,7 @@ public class AgentControllerTest {
 		
 		String[] names = new String[]{"Bob", "bob", "BOB"};
 		for(String name : names){
-			mockMvc.perform(get("/agent/profile/"+name))
+			mockMvc.perform(get("/agent/show/"+name))
 			.andExpect(view().name("agent_profile"))
 			.andExpect(model().attributeExists("agent"))
 			.andExpect(model().attribute("agent", clone));
@@ -55,7 +55,7 @@ public class AgentControllerTest {
 		AgentController control = new AgentController(repo);
 		MockMvc mockMvc = standaloneSetup(control).build();
 		
-		mockMvc.perform(get("/agent/profile/void"))
+		mockMvc.perform(get("/agent/show/void"))
 			.andExpect(status().is(404));
 	}
 	
