@@ -103,10 +103,6 @@ fieldset{
 	background-color: #0b0c0d;
 }
 
-.blue { border: 1px solid #09c; }
-.blue legend { color:#09c; }
-
-
 legend{
 	font-style:italic;
 	padding-left:12px;
@@ -129,19 +125,6 @@ legend{
 .ENLIGHTED legend{
 	color: #28f428; 
 }
-
-/* hr {
-    display: block;
-    clear: both;
-    height: 0;
-    margin: 40px 0 80px;
-    padding: 0;
-    border: 0;
-    font-family: arial;
-    text-align: center;
-    font-size: 60px;
-    line-height: 1;
-} */
 
 .RESISTANCE hr{
 	color: #00c2ff;

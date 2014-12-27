@@ -34,8 +34,14 @@
 		</div>
 	
 		<div class="container">
-			<h1>Welcome to Ingress Compagnion</h1>
+			<h1>Login</h1>
 			<hr/>
+			<form name="f" th:action="@{/login/openid}" id="googleOpenId" method="post" >
+    			<input id="openid_identifier" name="openid_identifier" type="hidden" value="https://www.google.com/accounts/o8/id"/>
+    			<img src="/img/social/google.png" onClick="submitForm('googleOpenId')"/>
+    			
+    			<input type="submit" value="login"/>
+			</form>
 		</div>
 		
 		<div th:replace="fragments/footer :: footer">&copy; 2014 The Static Templates</div>

@@ -18,7 +18,7 @@ import be.shoktan.ingressCompagnion.repository.RegisteredAgentRepository;
 
 public class IngressAgentService implements UserDetailsService{
 	static final Logger logger = LoggerFactory.getLogger(IngressAgentService.class);
-	private final RegisteredAgentRepository repo;
+	private RegisteredAgentRepository repo;
 
 	
 	/**

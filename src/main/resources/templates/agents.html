@@ -1,7 +1,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 	<head>
 		<title>Ingress Compagnion - The agents</title>
-		<link rel="stylesheet" type="text/css" th:href="@{/style.css}" media="screen"></link>
+		<link rel="stylesheet" type="text/css" th:href="@{/static/style.css}" media="screen"></link>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></meta>
 		
 		<link href="http://cdn.jsdelivr.net/webjars/bootstrap/3.2.0/css/bootstrap.min.css"
@@ -48,7 +48,7 @@
 					</td>
 					
 					<td th:text="#{|faction.${agent.getFaction()}|}">The best faction</td>
-					<td th:text="${agent.isRegistered()} ? '#{message.yes}'">Registered?</td>
+					<td th:text="${agent.isRegistered()} ? #{message.yes}">Registered?</td>
 				</tr>
 				
 			</table>
