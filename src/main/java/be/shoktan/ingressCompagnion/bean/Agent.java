@@ -132,7 +132,9 @@ public class Agent {
 		return builder.toString();
 	}
 	
-	
+	public boolean isRegistered(){
+		return this instanceof RegisteredAgent;
+	}
 	
 	
 }

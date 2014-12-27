@@ -4,7 +4,16 @@ table, th, td {
 }
 
 th, td {
-	padding: 15px;
+	padding: 20px;
+}
+
+td{
+	text-align: right;
+}
+
+th{
+	font-variant: small-caps;
+	text-align: center; 
 }
 
 .color_cyan {
@@ -19,7 +28,7 @@ th, td {
 	color: #00c2ff;
 }
 
-.ENLIGHTENED {
+.ENLIGHTED {
 	color: #28f428;
 }
 
@@ -83,4 +92,65 @@ html, body {
 
 .level_8 {
 	color: #9627f4;
+}
+
+
+fieldset{
+	margin-top:12px;
+	padding:12px;
+	-moz-border-radius:8px;
+	border-radius:8px;
+	background-color: #0b0c0d;
+}
+
+.blue { border: 1px solid #09c; }
+.blue legend { color:#09c; }
+
+
+legend{
+	font-style:italic;
+	padding-left:12px;
+	padding-right:12px;
+}
+
+
+.RESISTANCE fieldset{
+	 border: 1px solid #00c2ff;
+}
+
+.RESISTANCE legend{
+	color: #00c2ff; 
+}
+
+.ENLIGHTED fieldset{
+	 border: 1px solid #28f428;
+}
+
+.ENLIGHTED legend{
+	color: #28f428; 
+}
+
+/* hr {
+    display: block;
+    clear: both;
+    height: 0;
+    margin: 40px 0 80px;
+    padding: 0;
+    border: 0;
+    font-family: arial;
+    text-align: center;
+    font-size: 60px;
+    line-height: 1;
+} */
+
+.RESISTANCE hr{
+	color: #00c2ff;
+	background-color: #00c2ff;
+	height: 5px;
+}
+
+.ENLIGHTED hr{
+	color: #28f428;
+	background-color: #28f428;
+	height: 5px;
 }
