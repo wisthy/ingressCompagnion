@@ -13,6 +13,7 @@
 <body>
 	<fieldset th:fragment="baseAgent">
 		<legend th:text="#{agent.section.basic}">Basic info</legend>
+		<a class="quickLink" th:href="@{|/agent/modify/${agent.getCodename()}|}" th:text="#{message.edit}">modify</a>
 		<ul>
 			<li>
 				<span th:text="#{message.label(#{agent.codename})}">Codename:</span> 

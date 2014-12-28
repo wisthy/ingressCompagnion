@@ -29,12 +29,12 @@ public class Agent {
 	// ==== can change once in a while ====
 	@Column
 	@NotNull
-	@Size(min=5, max=16, message="{codename.size}")
+	@Size(min=3, max=16, message="{codename.size}")
 	private String codename;
 	
 	@Enumerated(EnumType.STRING)
 	@NotNull
-	private Faction faction;
+	private Faction faction; 
 	
 	// ==== can change frequently      ====
 	
@@ -135,6 +135,22 @@ public class Agent {
 	public boolean isRegistered(){
 		return this instanceof RegisteredAgent;
 	}
+
+	/**
+	 * @param codename the codename to set
+	 */
+	public void setCodename(String codename) {
+		this.codename = codename;
+	}
+
+	/**
+	 * @param faction the faction to set
+	 */
+	public void setFaction(Faction faction) {
+		this.faction = faction;
+	}
+	
+	
 	
 	
 }

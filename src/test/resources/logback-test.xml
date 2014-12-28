@@ -9,6 +9,7 @@
 	</appender>
 
 	<logger name="be.shoktan" level="debug"/>
+	<logger bame="be.shoktan.ingressCompagnion.web" level="DEBUG"/>
 
 	<root level="info">
 		<appender-ref ref="STDOUT" />

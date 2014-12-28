@@ -3,16 +3,22 @@ package be.shoktan.ingressCompagnion.web;
 import java.security.Principal;
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import be.shoktan.ingressCompagnion.bean.Agent;
+import be.shoktan.ingressCompagnion.model.Faction;
 import be.shoktan.ingressCompagnion.repository.AgentRepository;
 
 /**
@@ -54,5 +60,28 @@ public class AgentController {
 		return "agents";
 	}
 	
+	@RequestMapping(value="/modify/{codename}", method=RequestMethod.GET)
+	public String modifyAgent(@PathVariable String codename, Model model){
+		Agent agent = repository.findByCodename(codename);
+		if(logger.isDebugEnabled())logger.debug("agent found: "+agent);
+		model.addAttribute("agent", agent);
+		model.addAttribute("factions", Faction.values());
+		return "agent_modify";
+	}
 	
+	@RequestMapping(value="/modify/", method=RequestMethod.POST)
+	public String saveSpittle(@Valid @ModelAttribute("agent") Agent form, BindingResult result, Model model) throws Exception {
+		if(logger.isDebugEnabled())logger.debug("updating agent <"+form+">");
+		
+		if(result.hasErrors()){
+			logger.warn("unable to save the agent modification due to validation errors");
+			for(ObjectError err : result.getAllErrors()){
+				logger.warn("validation error:: "+err.getDefaultMessage());
+			}
+			return "/agent/modify";
+		}
+		
+		repository.save(form);
+		return "redirect:/agent/show/"+form.getCodename();
+	}
 }

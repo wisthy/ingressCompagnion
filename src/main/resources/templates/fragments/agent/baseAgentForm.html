@@ -1,0 +1,45 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+	<link rel="stylesheet" type="text/css" th:href="@{/resources/style.css}"></link>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+	<link href="http://cdn.jsdelivr.net/webjars/bootstrap/3.2.0/css/bootstrap.min.css"
+			th:href="@{/webjars/bootstrap/3.2.0/css/bootstrap.min.css}"
+			rel="stylesheet" media="screen"></link>
+	<script src="http://cdn.jsdelivr.net/webjars/jquery/2.1.1/jquery.min.js"
+			th:src="@{/webjars/jquery/2.1.1/jquery.min.js}"></script>
+</head>
+<body>
+	<fieldset th:fragment="baseAgent">
+		<legend th:text="#{agent.section.basic.form}">Updating Basic info</legend>
+		<form method="POST" th:object="${agent}" th:action="@{|/agent/modify/${agent.getCodename()}|}">
+		<div class="errors" th:if="${#fields.hasErrors('*')}">
+			<ul>
+				<li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
+			</ul>
+		</div>
+		<ul>
+			<li>
+				<label th:class="${#fields.hasErrors('codename')}? 'error'" th:text="#{message.label(#{agent.codename})}">Code name label</label>:
+				<input type="text" th:field="*{codename}" th:class="${#fields.hasErrors('codename')}? 'error'" />
+			</li>
+			
+			<li>
+				<label th:class="${#fields.hasErrors('faction')}? 'error'" th:text="#{message.label(#{agent.faction})}">Faction label</label>:
+			
+				<select th:field="*{faction}">
+  					<option th:each="type : ${factions}" 
+          				th:value="${type}" 
+          				th:text="#{|faction.${type}|}">option list</option>
+				</select>
+			</li>
+			<li>
+				<input type="submit" th:value="#{message.submit}" value="ok"/>
+				<input type="button" th:value="#{message.cancel}" value="go back"/>
+			</li>
+		</ul>
+		</form>
+	</fieldset>
+</body>
+</html>

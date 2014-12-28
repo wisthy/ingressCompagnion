@@ -83,7 +83,59 @@ public class AgentControllerTest {
 		for(Agent a : saved){
 			result.andExpect(model().attribute("agents", hasItem(a)));
 		}
+	}
+	
+	@Test
+	public void shouldShowEditProfile() throws Exception {
+		AgentRepository repo = mock(AgentRepository.class);
+		Agent saved = new Agent(1L, "Bob", Faction.RESISTANCE);
+		Agent clone = new Agent(1L, "Bob", Faction.RESISTANCE);
+		when(repo.findOne(1)).thenReturn(saved);
+		when(repo.findByCodename("bob")).thenReturn(saved);
+		when(repo.findByCodename("Bob")).thenReturn(saved);
+		when(repo.findByCodename("BOB")).thenReturn(saved);
 		
-		//.andExpect(model().attribute("spittleList", Matchers.contains(expectedSpittles.toArray())));
+		AgentController control = new AgentController(repo);
+		
+		MockMvc mockMvc = standaloneSetup(control).build();
+		
+		
+		String[] names = new String[]{"Bob", "bob", "BOB"};
+		for(String name : names){
+			mockMvc.perform(get("/agent/modify/"+name))
+			.andExpect(view().name("agent_modify"))
+			.andExpect(model().attributeExists("agent"))
+			.andExpect(model().attribute("agent", clone))
+			.andExpect(model().attributeExists("factions"))
+			.andExpect(model().attribute("factions", Faction.values()));
+		}
+	}
+	
+	@Test
+	public void should404onShowEditProfile() throws Exception{
+		AgentRepository repo = mock(AgentRepository.class);
+		when(repo.findByCodename("void")).thenThrow(new NotFoundException(Agent.class, "no agent with codename void"));
+		
+		AgentController control = new AgentController(repo);
+		MockMvc mockMvc = standaloneSetup(control).build();
+		
+		mockMvc.perform(get("/agent/modify/void"))
+			.andExpect(status().is(404));
+	}
+	
+	@Test
+	public void saveSpittle() throws Exception {
+		AgentRepository repo = mock(AgentRepository.class);
+		AgentController control = new AgentController(repo);
+		MockMvc mockMvc = standaloneSetup(control).build();
+		
+		String name = "Bob";
+		
+		mockMvc.perform(post("/agent/modify/")
+					.param("codename", "Bob") 
+					.param("faction", Faction.ENLIGHTED.toString()))
+				.andExpect(redirectedUrl("/agent/show/"+name));
+		
+		verify(repo, atLeastOnce()).save(new Agent(null, "Bob", Faction.ENLIGHTED));
 	}
 }
