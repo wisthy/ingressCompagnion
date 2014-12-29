@@ -160,4 +160,27 @@ public class AgentControllerTest {
 				verify(repo, never()).save(clone);
 		}
 	}
+	
+	@Test
+	public void saveNewAgentShouldSendValidationErrorOnWrongFaction() throws Exception {
+		AgentRepository repo = mock(AgentRepository.class);
+		AgentController control = new AgentController(repo);
+		MockMvc mockMvc = standaloneSetup(control).build();
+		
+		String[] factions = new String[]{"Bo", null};
+		String name = "Bob";
+		
+		for(String faction : factions){
+			Agent clone = new Agent(null, name, null);
+			mockMvc.perform(post("/agent/modify/")
+					.param("codename", name) 
+					.param("faction", faction))
+				.andExpect(view().name("agent_modify"))
+				.andExpect(model().attributeExists("agent"))
+				//.andExpect(model().attribute("agent", clone))
+				.andExpect(model().attributeExists("factions"))
+				.andExpect(model().attribute("factions", Faction.values()));
+				verify(repo, never()).save(clone);
+		}
+	}
 }
