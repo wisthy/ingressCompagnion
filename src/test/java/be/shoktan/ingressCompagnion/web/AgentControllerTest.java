@@ -156,8 +156,7 @@ public class AgentControllerTest {
 				.andExpect(model().attributeExists("agent"))
 				.andExpect(model().attribute("agent", clone));
 				.andExpect(model().attributeExists("factions"))
-				.andExpect(model().attribute("factions", Faction.values()))
-				.andExpect(model().attributeHasFieldErrors("codename"));
+				.andExpect(model().attribute("factions", Faction.values()));
 				verify(repo, never()).save(clone);
 		}
 	}
