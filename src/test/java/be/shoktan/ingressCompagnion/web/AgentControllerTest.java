@@ -154,7 +154,7 @@ public class AgentControllerTest {
 					.param("faction", Faction.ENLIGHTED.toString()))
 				.andExpect(view().name("agent_modify"))
 				.andExpect(model().attributeExists("agent"))
-				.andExpect(model().attribute("agent", clone));
+				.andExpect(model().attribute("agent", clone))
 				.andExpect(model().attributeExists("factions"))
 				.andExpect(model().attribute("factions", Faction.values()));
 				verify(repo, never()).save(clone);
