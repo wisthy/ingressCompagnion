@@ -70,7 +70,7 @@ public class AgentController {
 	}
 	
 	@RequestMapping(value="/modify/", method=RequestMethod.POST)
-	public String saveSpittle(@Valid @ModelAttribute("agent") Agent form, BindingResult result, Model model) throws Exception {
+	public String saveAgent(@Valid @ModelAttribute("agent") Agent form, BindingResult result, Model model) throws Exception {
 		if(logger.isDebugEnabled())logger.debug("updating agent <"+form+">");
 		
 		if(result.hasErrors()){
@@ -78,7 +78,8 @@ public class AgentController {
 			for(ObjectError err : result.getAllErrors()){
 				logger.warn("validation error:: "+err.getDefaultMessage());
 			}
-			return "/agent/modify";
+			model.addAttribute("factions", Faction.values());
+			return "agent_modify";
 		}
 		
 		repository.save(form);
