@@ -140,7 +140,7 @@ public class AgentControllerTest {
 	}
 	
 	@Test
-	public void saveNewAgentShouldSendValidationError() throws Exception {
+	public void saveNewAgentShouldSendValidationErrorOnWrongCodename() throws Exception {
 		AgentRepository repo = mock(AgentRepository.class);
 		AgentController control = new AgentController(repo);
 		MockMvc mockMvc = standaloneSetup(control).build();
@@ -154,10 +154,11 @@ public class AgentControllerTest {
 					.param("faction", Faction.ENLIGHTED.toString()))
 				.andExpect(view().name("agent_modify"))
 				.andExpect(model().attributeExists("agent"))
-				.andExpect(model().attribute("agent", clone))
+				.andExpect(model().attribute("agent", clone));
 				.andExpect(model().attributeExists("factions"))
-				.andExpect(model().attribute("factions", Faction.values()));
+				.andExpect(model().attribute("factions", Faction.values()))
 				.andExpect(model().attributeHasFieldErrors("codename"));
+				verify(repo, never()).save(clone);
 		}
 	}
 }
