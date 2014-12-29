@@ -124,7 +124,7 @@ public class AgentControllerTest {
 	}
 	
 	@Test
-	public void saveSpittle() throws Exception {
+	public void saveNewAgentOK() throws Exception {
 		AgentRepository repo = mock(AgentRepository.class);
 		AgentController control = new AgentController(repo);
 		MockMvc mockMvc = standaloneSetup(control).build();
@@ -137,5 +137,22 @@ public class AgentControllerTest {
 				.andExpect(redirectedUrl("/agent/show/"+name));
 		
 		verify(repo, atLeastOnce()).save(new Agent(null, "Bob", Faction.ENLIGHTED));
+	}
+	
+	@Test
+	public void saveNewAgentShouldSendValidationError() throws Exception {
+		AgentRepository repo = mock(AgentRepository.class);
+		AgentController control = new AgentController(repo);
+		MockMvc mockMvc = standaloneSetup(control).build();
+		
+		String[] names = new String[]{"Bo", null, "Bob45678901234567"};
+		
+		for(String name : names){
+			mockMvc.perform(post("/agent/modify/")
+					.param("codename", name) 
+					.param("faction", Faction.ENLIGHTED.toString()))
+				.andExpect(status().isBadRequest())
+				.andExpect(model().attributeHasFieldErrors("codename"));
+		}
 	}
 }
