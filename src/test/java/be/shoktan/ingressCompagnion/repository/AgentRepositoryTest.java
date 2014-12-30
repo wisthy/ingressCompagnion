@@ -1,7 +1,6 @@
 package be.shoktan.ingressCompagnion.repository;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 import java.util.List;
 
@@ -116,5 +115,60 @@ public class AgentRepositoryTest {
 		assertEquals(size, agentRepository.count());
 		assertEquals(agent, saved);
 		assertEquals(new Long(1L), saved.getId());
+	}
+	
+	@Test
+	@Transactional
+	public void notFoundOnFindByCodename(){
+		try {
+			Agent a = agentRepository.findByCodename("void");
+			assertNull("agent should be null", a);
+		} catch (NotFoundException e) {
+			assertTrue("the exception should be raiserd here", true);
+		}
+	}
+	
+	@Test
+	@Transactional
+	public void notFoundOnFindOne(){
+		try {
+			Agent a = agentRepository.findOne(2042L);
+			assertNull("agent should be null", a);
+		} catch (NotFoundException e) {
+			assertTrue("the exception should be raiserd here", true);
+		}
+	}
+	
+	@Test
+	@Transactional
+	public void notFoundOnDelete(){
+		try {
+			agentRepository.delete("void");
+			fail("should not be able to delete this agent");
+		} catch (NotFoundException e) {
+			assertTrue("the exception should be raiserd here", true);
+		}
+	}
+	
+	@Test
+	@Transactional
+	public void deleteAgent(){
+		int size = AGENTS.length;
+		assertEquals(size, agentRepository.count());
+		
+		long id = 1L;
+		Agent a = agentRepository.findOne(id);
+		
+		agentRepository.delete(a.getCodename());
+		
+		assertEquals(size - 1, agentRepository.count());
+		
+		try {
+			Agent b = agentRepository.findOne(id);
+			assertNull("agent should be null", a);
+		} catch (NotFoundException e) {
+			assertTrue("the exception should be raiserd here", true);
+		}
+		
 	}
 }

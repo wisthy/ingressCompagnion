@@ -111,7 +111,13 @@ public class AgentHibernateRepository implements AgentRepository {
 					.createCriteria(Agent.class)
 					.add(Restrictions.eq("codename", codename).ignoreCase())
 					.uniqueResult();
-		currentSession().delete(agent);
+		if(agent == null){
+			String message = "cannot delete an Agent with codename <"+codename+">";
+			logger.error(message);
+			throw new NotFoundException(Agent.class, message);
+		}else{
+			currentSession().delete(agent);
+		}
 		
 	}
 	
