@@ -55,7 +55,7 @@ public class Agent {
 		this.faction = faction;
 	}
 	
-	protected Agent(){
+	public Agent(){
 		
 	}
 

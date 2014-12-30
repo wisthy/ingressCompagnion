@@ -124,23 +124,26 @@ public class AgentControllerTest {
 	}
 	
 	@Test
-	public void saveNewAgentOK() throws Exception {
+	public void modifyAgentOK() throws Exception {
 		AgentRepository repo = mock(AgentRepository.class);
 		AgentController control = new AgentController(repo);
 		MockMvc mockMvc = standaloneSetup(control).build();
 		
 		String name = "Bob";
+		Agent saved = new Agent(null, name, Faction.ENLIGHTED);
+		when(repo.findByCodename(name)).thenReturn(saved);
 		
-		mockMvc.perform(post("/agent/modify/")
+		mockMvc.perform(post("/agent/modify/"+name)
 					.param("codename", "Bob") 
 					.param("faction", Faction.ENLIGHTED.toString()))
 				.andExpect(redirectedUrl("/agent/show/"+name));
 		
-		verify(repo, atLeastOnce()).save(new Agent(null, "Bob", Faction.ENLIGHTED));
+		
+		verify(repo, atLeastOnce()).save(saved);
 	}
 	
 	@Test
-	public void saveNewAgentShouldSendValidationErrorOnWrongCodename() throws Exception {
+	public void modifyAgentShouldSendValidationErrorOnWrongCodename() throws Exception {
 		AgentRepository repo = mock(AgentRepository.class);
 		AgentController control = new AgentController(repo);
 		MockMvc mockMvc = standaloneSetup(control).build();
@@ -149,7 +152,7 @@ public class AgentControllerTest {
 		
 		for(String name : names){
 			Agent clone = new Agent(null, name, Faction.ENLIGHTED);
-			mockMvc.perform(post("/agent/modify/")
+			mockMvc.perform(post("/agent/modify/"+name)
 					.param("codename", name) 
 					.param("faction", Faction.ENLIGHTED.toString()))
 				.andExpect(view().name("agent_modify"))
@@ -162,7 +165,7 @@ public class AgentControllerTest {
 	}
 	
 	@Test
-	public void saveNewAgentShouldSendValidationErrorOnWrongFaction() throws Exception {
+	public void modifyAgentShouldSendValidationErrorOnWrongFaction() throws Exception {
 		AgentRepository repo = mock(AgentRepository.class);
 		AgentController control = new AgentController(repo);
 		MockMvc mockMvc = standaloneSetup(control).build();
@@ -172,10 +175,75 @@ public class AgentControllerTest {
 		
 		for(String faction : factions){
 			Agent clone = new Agent(null, name, null);
-			mockMvc.perform(post("/agent/modify/")
+			mockMvc.perform(post("/agent/modify/"+name)
 					.param("codename", name) 
 					.param("faction", faction))
 				.andExpect(view().name("agent_modify"))
+				.andExpect(model().attributeExists("agent"))
+				//.andExpect(model().attribute("agent", clone))
+				.andExpect(model().attributeExists("factions"))
+				.andExpect(model().attribute("factions", Faction.values()));
+				verify(repo, never()).save(clone);
+		}
+	}
+	
+	
+	@Test
+	public void createAgentOK() throws Exception {
+		AgentRepository repo = mock(AgentRepository.class);
+		AgentController control = new AgentController(repo);
+		MockMvc mockMvc = standaloneSetup(control).build();
+		
+		String name = "Bob2";
+		Agent saved = new Agent(null, name, Faction.ENLIGHTED);
+		//when(repo.findByCodename(name)).thenReturn(saved);
+		
+		mockMvc.perform(post("/agent/add")
+					.param("codename", name) 
+					.param("faction", Faction.ENLIGHTED.toString()))
+				.andExpect(redirectedUrl("/agent/show/"+name));
+		
+		
+		verify(repo, atLeastOnce()).save(saved);
+	}
+	
+	@Test
+	public void createAgentShouldSendValidationErrorOnWrongCodename() throws Exception {
+		AgentRepository repo = mock(AgentRepository.class);
+		AgentController control = new AgentController(repo);
+		MockMvc mockMvc = standaloneSetup(control).build();
+		
+		String[] names = new String[]{"Bo", null, "Bob45678901234567"};
+		
+		for(String name : names){
+			Agent clone = new Agent(null, name, Faction.ENLIGHTED);
+			mockMvc.perform(post("/agent/add")
+					.param("codename", name) 
+					.param("faction", Faction.ENLIGHTED.toString()))
+				.andExpect(view().name("agent_create"))
+				.andExpect(model().attributeExists("agent"))
+				.andExpect(model().attribute("agent", clone))
+				.andExpect(model().attributeExists("factions"))
+				.andExpect(model().attribute("factions", Faction.values()));
+				verify(repo, never()).save(clone);
+		}
+	}
+	
+	@Test
+	public void createAgentShouldSendValidationErrorOnWrongFaction() throws Exception {
+		AgentRepository repo = mock(AgentRepository.class);
+		AgentController control = new AgentController(repo);
+		MockMvc mockMvc = standaloneSetup(control).build();
+		
+		String[] factions = new String[]{"Bo", null};
+		String name = "Bob";
+		
+		for(String faction : factions){
+			Agent clone = new Agent(null, name, null);
+			mockMvc.perform(post("/agent/add")
+					.param("codename", name) 
+					.param("faction", faction))
+				.andExpect(view().name("agent_create"))
 				.andExpect(model().attributeExists("agent"))
 				//.andExpect(model().attribute("agent", clone))
 				.andExpect(model().attributeExists("factions"))

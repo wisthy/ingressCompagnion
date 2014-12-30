@@ -28,7 +28,6 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 public class RepositoryTestConfig {
 	static final Logger logger = LoggerFactory.getLogger(RepositoryTestConfig.class);
 	
-	@Profile(value="junit")
 	@Bean
 	public DataSource dataSource() {
 		EmbeddedDatabaseBuilder edb = new EmbeddedDatabaseBuilder();
@@ -39,7 +38,6 @@ public class RepositoryTestConfig {
 		return embeddedDatabase;
 	}
 	
-	@Profile(value="junit")
 	@Bean
 	public SessionFactory sessionFactoryBean() {
 		try {
