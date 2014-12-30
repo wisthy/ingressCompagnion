@@ -133,7 +133,7 @@ public class RegisteredAgent extends Agent {
 			return false;
 		}
 		if (!(obj instanceof RegisteredAgent)) {
-			return false;
+			return true;
 		}
 		RegisteredAgent other = (RegisteredAgent) obj;
 		if (email == null) {

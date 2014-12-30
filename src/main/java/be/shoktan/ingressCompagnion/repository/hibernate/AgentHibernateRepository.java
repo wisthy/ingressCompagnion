@@ -101,4 +101,20 @@ public class AgentHibernateRepository implements AgentRepository {
 		return (List<Agent>) currentSession()
 				.createCriteria(Agent.class).list();
 	}
+
+	/* (non-Javadoc)
+	 * @see be.shoktan.ingressCompagnion.repository.AgentRepository#delete(java.lang.String)
+	 */
+	@Override
+	public void delete(String codename) {
+		Agent agent = (Agent) currentSession()
+					.createCriteria(Agent.class)
+					.add(Restrictions.eq("codename", codename).ignoreCase())
+					.uniqueResult();
+		currentSession().delete(agent);
+		
+	}
+	
+	
+	
 }

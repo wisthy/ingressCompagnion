@@ -102,4 +102,19 @@ public class AgentRepositoryTest {
 		assertEquals(size + 1, agentRepository.count());
 		assertEquals(agent, agentRepository.findOne(saved.getId()));
 	}
+	
+	@Test
+	@Transactional
+	public void updateAgent(){
+		int size = AGENTS.length;
+		assertEquals(size, agentRepository.count());
+		
+		Agent agent = agentRepository.findOne(1L);
+		agent.setCodename("maxiKoin");
+		Agent saved = agentRepository.save(agent);
+		
+		assertEquals(size, agentRepository.count());
+		assertEquals(agent, saved);
+		assertEquals(new Long(1L), saved.getId());
+	}
 }
