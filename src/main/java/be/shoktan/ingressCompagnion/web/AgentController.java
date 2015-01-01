@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import be.shoktan.ingressCompagnion.bean.Agent;
+import be.shoktan.ingressCompagnion.bean.RegisteredAgent;
 import be.shoktan.ingressCompagnion.model.Faction;
 import be.shoktan.ingressCompagnion.repository.AgentRepository;
 
@@ -37,19 +39,25 @@ public class AgentController {
 		this.repository = agentRepository;
 	}
 	
+	/* ===== Enum mapping ==== */
+	@ModelAttribute("factions")
+	public Faction[] factions() {
+		return Faction.values();
+	}
+	
 	/* ===== Create queries ===== */
 	
 	@RequestMapping(value="/add/", method=RequestMethod.GET)
-	public String addAgent(Model model){
+	public String addAgentInit(Model model){
 		Agent agent = new Agent();
 		if(logger.isDebugEnabled())logger.debug("agent found: "+agent);
 		model.addAttribute("agent", agent);
-		model.addAttribute("factions", Faction.values());
+		//model.addAttribute("factions", Faction.values());
 		return "agent_modify";
 	}
 	
 	@RequestMapping(value="/add", method=RequestMethod.POST)
-	public String addAgent(@Valid @ModelAttribute("agent") Agent form, BindingResult result, Model model) throws Exception {
+	public String addAgentProcess(@Valid @ModelAttribute("agent") Agent form, BindingResult result, RedirectAttributes model) throws Exception {
 		if(logger.isDebugEnabled())logger.debug("creating agent <"+form+">");
 		
 		if(result.hasErrors()){
@@ -57,12 +65,14 @@ public class AgentController {
 			for(ObjectError err : result.getAllErrors()){
 				logger.warn("validation error:: "+err.getDefaultMessage());
 			}
-			model.addAttribute("factions", Faction.values());
+			//model.addAttribute("factions", Faction.values());
 			return "agent_create";
 		}
 		
-		repository.save(form);
-		return "redirect:/agent/show/"+form.getCodename();
+		Agent agent = repository.save(form);
+		model.addAttribute("codename", agent.getCodename());
+		model.addFlashAttribute("agent", agent);
+		return "redirect:/agent/show/{codename}";
 	}
 	
 	/* ===== Read queries ===== */
@@ -71,14 +81,18 @@ public class AgentController {
 	public String showProfile(Principal userPrincipal, Model model){
 		String name = userPrincipal.getName();
 		if(logger.isDebugEnabled())logger.debug("showProfile():: "+name);
-		return "redirect:/agent/show/"+name;
+		model.addAttribute("codename", name);
+		return "redirect:/agent/show/{codename}";
 	}
 	
 	@RequestMapping(value="/show/{codename}", method=RequestMethod.GET)
 	public String showAgent(@PathVariable String codename, Model model){
-		Agent agent = repository.findByCodename(codename);
-		if(logger.isDebugEnabled())logger.debug("agent found: "+agent);
-		model.addAttribute("agent", agent);
+		Agent agent = null;
+		if(!model.containsAttribute("agent")){
+			agent = repository.findByCodename(codename);
+			if(logger.isDebugEnabled())logger.debug("agent found: "+agent);
+			model.addAttribute("agent", agent);
+		}
 		return "agent_profile";
 	}
 	
@@ -93,16 +107,16 @@ public class AgentController {
 	/* ===== Update queries ===== */
 	
 	@RequestMapping(value="/modify/{codename}", method=RequestMethod.GET)
-	public String modifyAgent(@PathVariable String codename, Model model){
+	public String modifyAgentInit(@PathVariable String codename, Model model){
 		Agent agent = repository.findByCodename(codename);
 		if(logger.isDebugEnabled())logger.debug("agent found: "+agent);
 		model.addAttribute("agent", agent);
-		model.addAttribute("factions", Faction.values());
+		//model.addAttribute("factions", Faction.values());
 		return "agent_modify";
 	}
 	
 	@RequestMapping(value="/modify/{codename}", method=RequestMethod.POST)
-	public String saveAgent(@PathVariable String codename, @Valid @ModelAttribute("agent") Agent form, BindingResult result, Model model) throws Exception {
+	public String modifyAgentProcess(@PathVariable String codename, @Valid @ModelAttribute("agent") Agent form, BindingResult result, RedirectAttributes model) throws Exception {
 		if(logger.isDebugEnabled())logger.debug("updating agent <"+form+">");
 		
 		if(result.hasErrors()){
@@ -110,7 +124,7 @@ public class AgentController {
 			for(ObjectError err : result.getAllErrors()){
 				logger.warn("validation error:: "+err.getDefaultMessage());
 			}
-			model.addAttribute("factions", Faction.values());
+			//model.addAttribute("factions", Faction.values());
 			return "agent_modify";
 		}
 		
@@ -118,9 +132,38 @@ public class AgentController {
 		agent.setCodename(form.getCodename());
 		agent.setFaction(form.getFaction());
 		
-		repository.save(agent);
-		return "redirect:/agent/show/"+form.getCodename();
+		Agent saved = repository.save(agent);
+		model.addFlashAttribute("agent", saved);
+		model.addAttribute("codename", saved.getCodename());
+		return "redirect:/agent/show/{codename}";
 	}
 	
 	/* ===== Delete queries ===== */
+	
+	@RequestMapping(value = "/delete/{codename}", method=RequestMethod.GET)
+	public String deleteAgentInit(@PathVariable String codename, Model model){
+		Agent agent = repository.findByCodename(codename);
+		
+		if(agent instanceof RegisteredAgent){
+			return "redirect:/agent/list";
+		}
+		
+		model.addAttribute("agent", agent);
+		return "agent_delete";
+	}
+	
+	@RequestMapping(value = "/delete/{codename}", method=RequestMethod.POST)
+	public String deleteAgentProcess(@PathVariable String codename, RedirectAttributes model){
+		Agent agent = repository.findByCodename(codename);
+		model.addFlashAttribute("codename", codename);
+		
+		if(agent instanceof RegisteredAgent){
+			model.addFlashAttribute("status", "RegisteredAgent");
+			return "redirect:/agent/list";
+		}
+		
+		repository.delete(codename);
+		model.addFlashAttribute("status", "deleted");
+		return "redirect:/agent/list";
+	}
 }

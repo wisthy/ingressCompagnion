@@ -22,5 +22,5 @@ public interface AgentRepository extends IRepository<Agent> {
 	 * remove an agent from the repository
 	 * @param codename the codename of the agent to delete 
 	 */
-	void delete(String codename);
+	void delete(String codename) throws NotFoundException;
 }
