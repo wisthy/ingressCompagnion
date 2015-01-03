@@ -11,4 +11,7 @@ Short list of commands:
 | `mvn package` | export the project as a `WAR` | 
 
 
-Dev status:[![Build Status](https://drone.io/github.com/wisthy/ingressCompagnion/status.png)](https://drone.io/github.com/wisthy/ingressCompagnion/latest)
+This project use the following GIT branching model: http://nvie.com/posts/a-successful-git-branching-model/
+
+
+Dev status: [![Build Status](https://drone.io/github.com/wisthy/ingressCompagnion/status.png)](https://drone.io/github.com/wisthy/ingressCompagnion/latest)
