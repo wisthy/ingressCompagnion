@@ -70,7 +70,7 @@ public class Agent {
 	 * @return the codename
 	 */
 	public String getCodename() {
-		if(logger.isDebugEnabled())logger.debug("getCodename():: "+codename);
+		//if(logger.isDebugEnabled())logger.debug("getCodename():: "+codename);
 		return codename;
 	}
 

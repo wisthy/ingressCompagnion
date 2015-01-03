@@ -26,6 +26,12 @@ public interface IRepository<T> {
 	T save(T item);
 	
 	/**
+	 * update an existing item into the repository
+	 * @param item the item to update
+	 */
+	void update(T item);
+	
+	/**
 	 * search an item based on its id
 	 * @param id the id of the searched item
 	 * @return the item

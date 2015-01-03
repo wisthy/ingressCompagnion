@@ -41,6 +41,7 @@
 					<th th:text="#{agent.codename}">Code name</th>
 					<th th:text="#{agent.faction}">Faction</th>
 					<th th:text="#{agent.registered}">Registered</th>
+					<th th:text="#{header.actions}">what can we do?</th>
 				</tr>
 				<tr th:each="agent : ${agents}" th:class="${agent.getFaction()}">
 					<td>
@@ -49,6 +50,7 @@
 					
 					<td th:text="#{|faction.${agent.getFaction()}|}">The best faction</td>
 					<td th:text="${agent.isRegistered()} ? #{message.yes}">Registered?</td>
+					<td><a href="#" th:href="@{|/agent/delete/${agent.codename}|}" th:text="#{action.short.delete}">Bye</a></td>
 				</tr>
 				
 			</table>

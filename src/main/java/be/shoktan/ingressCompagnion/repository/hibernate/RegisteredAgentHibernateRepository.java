@@ -116,4 +116,13 @@ public class RegisteredAgentHibernateRepository implements RegisteredAgentReposi
 		return (List<RegisteredAgent>) currentSession()
 				.createCriteria(RegisteredAgent.class).list();
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see be.shoktan.ingressCompagnion.repository.IRepository#update(java.lang.Object)
+	 */
+	@Override
+	public void update(RegisteredAgent item) {
+		currentSession().update(item);
+	}
 }

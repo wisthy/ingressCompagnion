@@ -140,7 +140,32 @@ public class AgentControllerTest {
 			performed.andExpect(model().attribute("agent", clone));
 			performed.andExpect(model().attributeExists("factions"));
 			performed.andExpect(model().attribute("factions", Faction.values()));
+			performed.andExpect(model().attribute(AgentController.FLAG_RETURN, AgentController.RETURN_MODIFY));
 		}
+	}
+	
+	@Test
+	public void shouldShowAddAgent() throws Exception {
+		// step 1: init environment/bean/archi stuff
+		AgentRepository repo = mock(AgentRepository.class);
+		AgentController control = new AgentController(repo);
+		MockMvc mockMvc = standaloneSetup(control).build();
+		
+		// step 2: init test variables/mocking - fixe
+		//String[] names = new String[]{"Bob", "bob", "BOB"};
+		
+		//for(String name : names){			
+			// step 3: do the test
+			ResultActions performed = mockMvc.perform(get("/agent/add"));
+			
+			// step 4: check the result
+			performed.andExpect(view().name("agent_modify"));
+			performed.andExpect(model().attributeExists("agent"));
+			performed.andExpect(model().attribute("agent", new Agent()));
+			performed.andExpect(model().attributeExists("factions"));
+			performed.andExpect(model().attribute("factions", Faction.values()));
+			performed.andExpect(model().attribute(AgentController.FLAG_RETURN, AgentController.RETURN_CREATION));
+		//}
 	}
 
 	@Test
@@ -176,8 +201,8 @@ public class AgentControllerTest {
 		
 		String newName = "Bob2";
 		Faction faction = Faction.RESISTANCE;
-		Agent saved = new Agent(mockedAgent.getId(), newName, faction);
-		doReturn(saved).when(repo).save(saved);
+		//Agent saved = new Agent(mockedAgent.getId(), newName, faction);
+		//doReturn(saved).when(repo).save(saved);
 
 		// step 3: do the test
 		ResultActions performed = mockMvc.perform(post("/agent/modify/{codename}", name)
@@ -187,8 +212,8 @@ public class AgentControllerTest {
 		// step 4: check the result
 		performed.andExpect(redirectedUrl("/agent/show/"+newName));
 		performed.andExpect(model().attribute("codename", newName));
-		performed.andExpect(flash().attribute("agent", saved));
-		verify(repo).save(saved);
+		performed.andExpect(flash().attribute("agent", mockedAgent));
+		verify(repo).update(mockedAgent);
 	}
 
 	@Test
@@ -216,7 +241,8 @@ public class AgentControllerTest {
 			performed.andExpect(model().attribute("agent", clone));
 			performed.andExpect(model().attributeExists("factions"));
 			performed.andExpect(model().attribute("factions", Faction.values()));
-			verify(repo, never()).save(clone);
+			performed.andExpect(model().attribute(AgentController.FLAG_RETURN, AgentController.RETURN_MODIFY));
+			verify(repo, never()).update(clone);
 		}
 	}
 
@@ -247,7 +273,8 @@ public class AgentControllerTest {
 			performed.andExpect(model().attribute("agent", clone));
 			performed.andExpect(model().attributeExists("factions"));
 			performed.andExpect(model().attribute("factions", Faction.values()));
-			verify(repo, never()).save(clone);
+			performed.andExpect(model().attribute(AgentController.FLAG_RETURN, AgentController.RETURN_MODIFY));
+			verify(repo, never()).update(clone);
 		}
 	}
 
@@ -296,11 +323,12 @@ public class AgentControllerTest {
 					.param("faction", Faction.ENLIGHTED.toString()));
 			
 			// step 4: check the result
-			performed.andExpect(view().name("agent_create"));
+			performed.andExpect(view().name("agent_modify"));
 			performed.andExpect(model().attributeExists("agent"));
 			performed.andExpect(model().attribute("agent", clone));
 			performed.andExpect(model().attributeExists("factions"));
 			performed.andExpect(model().attribute("factions", Faction.values()));
+			performed.andExpect(model().attribute(AgentController.FLAG_RETURN, AgentController.RETURN_CREATION));
 			verify(repo, never()).save(clone);
 		}
 	}
@@ -326,11 +354,12 @@ public class AgentControllerTest {
 					.param("faction", faction));
 			
 			// step 4: check the result
-			performed.andExpect(view().name("agent_create"));
+			performed.andExpect(view().name("agent_modify"));
 			performed.andExpect(model().attributeExists("agent"));
 			performed.andExpect(model().attribute("agent", clone));
 			performed.andExpect(model().attributeExists("factions"));
 			performed.andExpect(model().attribute("factions", Faction.values()));
+			performed.andExpect(model().attribute(AgentController.FLAG_RETURN, AgentController.RETURN_CREATION));
 			verify(repo, never()).save(clone);
 		}
 	}
