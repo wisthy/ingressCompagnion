@@ -58,6 +58,7 @@ public class AgentControllerTest {
 			performed.andExpect(view().name("agent_profile"));
 			performed.andExpect(model().attributeExists("agent"));
 			performed.andExpect(model().attribute("agent", clone));
+			performed.andExpect(model().attribute("showActions", true));
 			verify(repo).findByCodename(name);
 		}
 	}
@@ -466,6 +467,7 @@ public class AgentControllerTest {
 		performed.andExpect(view().name("agent_profile"));
 		performed.andExpect(model().attributeExists("agent"));
 		performed.andExpect(model().attribute("agent", mocked));
+		performed.andExpect(model().attribute("showActions", true));
 		verify(repo, never()).findByCodename(name);
 	}
 }

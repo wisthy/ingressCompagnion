@@ -2,6 +2,7 @@ package be.shoktan.ingressCompagnion.repository;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -109,12 +110,24 @@ public class AgentRepositoryTest {
 		assertEquals(size, agentRepository.count());
 		
 		Agent agent = agentRepository.findOne(1L);
-		agent.setCodename("maxiKoin");
-		Agent saved = agentRepository.save(agent);
+		String codename = "maxiKoin";
+		agent.setCodename(codename);
+		agentRepository.update(agent);
 		
 		assertEquals(size, agentRepository.count());
-		assertEquals(agent, saved);
-		assertEquals(new Long(1L), saved.getId());
+		
+		List<Agent> agents = new ArrayList<Agent>();
+		agents.add(agentRepository.findOne(agent.getId()));
+		agents.add(agentRepository.findByCodename(agent.getCodename()));
+		agents.add(agentRepository.findByCodename(codename));
+		
+		for(Agent saved : agents){
+			assertEquals(agent, saved);
+			assertEquals(new Long(1L), saved.getId());
+			assertEquals(codename, saved.getCodename());
+		}
+		
+		
 	}
 	
 	@Test
