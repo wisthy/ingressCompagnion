@@ -31,6 +31,9 @@ import be.shoktan.ingressCompagnion.repository.AgentRepository;
 @Controller
 @RequestMapping("/agent")
 public class AgentController {
+	public static final String RETURN_CREATION = "add";
+	public static final String RETURN_MODIFY = "modify";
+	public static final String FLAG_RETURN = "return";
 	static final Logger logger = LoggerFactory.getLogger(AgentController.class);
 	private AgentRepository repository;
 	
@@ -47,17 +50,17 @@ public class AgentController {
 	
 	/* ===== Create queries ===== */
 	
-	@RequestMapping(value="/add/", method=RequestMethod.GET)
+	@RequestMapping(value="/add", method=RequestMethod.GET)
 	public String addAgentInit(Model model){
 		Agent agent = new Agent();
 		if(logger.isDebugEnabled())logger.debug("agent found: "+agent);
 		model.addAttribute("agent", agent);
-		//model.addAttribute("factions", Faction.values());
+		model.addAttribute(FLAG_RETURN, RETURN_CREATION);
 		return "agent_modify";
 	}
 	
 	@RequestMapping(value="/add", method=RequestMethod.POST)
-	public String addAgentProcess(@Valid @ModelAttribute("agent") Agent form, BindingResult result, RedirectAttributes model) throws Exception {
+	public String addAgentProcess(@Valid @ModelAttribute("agent") Agent form, BindingResult result, RedirectAttributes flashModel, Model model) throws Exception {
 		if(logger.isDebugEnabled())logger.debug("creating agent <"+form+">");
 		
 		if(result.hasErrors()){
@@ -65,13 +68,13 @@ public class AgentController {
 			for(ObjectError err : result.getAllErrors()){
 				logger.warn("validation error:: "+err.getDefaultMessage());
 			}
-			//model.addAttribute("factions", Faction.values());
-			return "agent_create";
+			model.addAttribute(FLAG_RETURN, RETURN_CREATION);
+			return "agent_modify";
 		}
 		
 		Agent agent = repository.save(form);
-		model.addAttribute("codename", agent.getCodename());
-		model.addFlashAttribute("agent", agent);
+		flashModel.addAttribute("codename", agent.getCodename());
+		flashModel.addFlashAttribute("agent", agent);
 		return "redirect:/agent/show/{codename}";
 	}
 	
@@ -93,6 +96,7 @@ public class AgentController {
 			if(logger.isDebugEnabled())logger.debug("agent found: "+agent);
 			model.addAttribute("agent", agent);
 		}
+		model.addAttribute("showActions", true);
 		return "agent_profile";
 	}
 	
@@ -112,11 +116,12 @@ public class AgentController {
 		if(logger.isDebugEnabled())logger.debug("agent found: "+agent);
 		model.addAttribute("agent", agent);
 		//model.addAttribute("factions", Faction.values());
+		model.addAttribute(FLAG_RETURN, RETURN_MODIFY);
 		return "agent_modify";
 	}
 	
-	@RequestMapping(value="/modify/{codename}", method=RequestMethod.POST)
-	public String modifyAgentProcess(@PathVariable String codename, @Valid @ModelAttribute("agent") Agent form, BindingResult result, RedirectAttributes model) throws Exception {
+	@RequestMapping(value="/modify/{keyname}", method=RequestMethod.POST)
+	public String modifyAgentProcess(@PathVariable String keyname, @Valid @ModelAttribute("agent") Agent form, BindingResult result, RedirectAttributes flashModel, Model model) throws Exception {
 		if(logger.isDebugEnabled())logger.debug("updating agent <"+form+">");
 		
 		if(result.hasErrors()){
@@ -125,16 +130,18 @@ public class AgentController {
 				logger.warn("validation error:: "+err.getDefaultMessage());
 			}
 			//model.addAttribute("factions", Faction.values());
+			model.addAttribute(FLAG_RETURN, RETURN_MODIFY);
 			return "agent_modify";
 		}
 		
-		Agent agent = repository.findByCodename(codename);
+		Agent agent = repository.findByCodename(keyname);
+		if(logger.isDebugEnabled())logger.debug("agent ot update:: "+agent);
 		agent.setCodename(form.getCodename());
 		agent.setFaction(form.getFaction());
 		
-		Agent saved = repository.save(agent);
-		model.addFlashAttribute("agent", saved);
-		model.addAttribute("codename", saved.getCodename());
+		repository.update(agent);
+		flashModel.addFlashAttribute("agent", agent);
+		flashModel.addAttribute("codename", agent.getCodename());
 		return "redirect:/agent/show/{codename}";
 	}
 	
@@ -149,21 +156,22 @@ public class AgentController {
 		}
 		
 		model.addAttribute("agent", agent);
+		model.addAttribute("showActions", false);
 		return "agent_delete";
 	}
 	
 	@RequestMapping(value = "/delete/{codename}", method=RequestMethod.POST)
-	public String deleteAgentProcess(@PathVariable String codename, RedirectAttributes model){
+	public String deleteAgentProcess(@PathVariable String codename, RedirectAttributes flashModel, Model model){
 		Agent agent = repository.findByCodename(codename);
-		model.addFlashAttribute("codename", codename);
+		flashModel.addFlashAttribute("codename", codename);
 		
 		if(agent instanceof RegisteredAgent){
-			model.addFlashAttribute("status", "RegisteredAgent");
+			flashModel.addFlashAttribute("status", "RegisteredAgent");
 			return "redirect:/agent/list";
 		}
 		
 		repository.delete(codename);
-		model.addFlashAttribute("status", "deleted");
+		flashModel.addFlashAttribute("status", "deleted");
 		return "redirect:/agent/list";
 	}
 }

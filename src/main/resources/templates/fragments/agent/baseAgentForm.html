@@ -13,7 +13,7 @@
 <body>
 	<fieldset th:fragment="baseAgent">
 		<legend th:text="#{agent.section.basic.form}">Updating Basic info</legend>
-		<form method="POST" th:object="${agent}" th:action="@{|/agent/modify/${agent.getCodename()}|}">
+		<form method="POST" th:object="${agent}" th:action="(${return} == 'add')?@{/agent/add}:@{|/agent/modify/${agent.codename}|}">
 		<div class="errors" th:if="${#fields.hasErrors('*')}">
 			<ul>
 				<li th:each="err : ${#fields.errors('*')}" th:text="${err}">Input is incorrect</li>
@@ -36,7 +36,7 @@
 			</li>
 			<li>
 				<input type="submit" th:value="#{message.submit}" value="ok"/>
-				<input type="button" th:value="#{message.cancel}" value="go back"/>
+				<input type="button" value="ko" th:value="#{message.cancel}" onclick="redirect()" th:onclick="'window.location.href=\'' + @{|/agent/show/${agent.codename}|} + '\';'"/>
 			</li>
 		</ul>
 		</form>

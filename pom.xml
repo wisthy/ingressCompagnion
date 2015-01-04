@@ -141,7 +141,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
-			<plugin>
+			<!-- <plugin>
 				<groupId>com.github.github</groupId>
 				<artifactId>downloads-maven-plugin</artifactId>
 				<version>0.6</version>
@@ -160,12 +160,15 @@
 						<phase>install</phase>
 					</execution>
 				</executions>
-			</plugin>
+			</plugin> -->
 			<plugin>
 				<groupId>external.atlassian.jgitflow</groupId>
 				<artifactId>jgitflow-maven-plugin</artifactId>
 				<version>1.0-m4.3</version>
 				<configuration>
+					<flowInitContext>
+						<developBranchName>devel</developBranchName>
+					</flowInitContext>
 					<!-- see goals wiki page for configuration options -->
 				</configuration>
 			</plugin>
@@ -186,7 +189,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
+			<!-- <plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-site-plugin</artifactId>
 				<configuration>
@@ -217,7 +220,7 @@
 						</plugin>
 					</reportPlugins>
 				</configuration>
-			</plugin>
+			</plugin> -->
 		</plugins>
 	</build>
 

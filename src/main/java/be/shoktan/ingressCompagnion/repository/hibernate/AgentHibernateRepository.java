@@ -43,6 +43,7 @@ public class AgentHibernateRepository implements AgentRepository {
 	 * (non-Javadoc)
 	 * @see be.shoktan.ingressCompagnion.repository.IRepository#count()
 	 */
+	@Override
 	public long count() {
 		return findAll().size();
 	}
@@ -51,16 +52,28 @@ public class AgentHibernateRepository implements AgentRepository {
 	 * (non-Javadoc)
 	 * @see be.shoktan.ingressCompagnion.repository.IRepository#save(java.lang.Object)
 	 */
+	@Override
 	public Agent save(Agent item) {
 		Serializable id = currentSession().save(item); //<co id="co_UseCurrentSession"/>
 		
 		return new Agent((Long)id, item.getCodename(), item.getFaction());
 	}
 	
+	
+	/*
+	 * (non-Javadoc)
+	 * @see be.shoktan.ingressCompagnion.repository.IRepository#update(java.lang.Object)
+	 */
+	@Override
+	public void update(Agent item){
+		currentSession().update(item);
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * @see be.shoktan.ingressCompagnion.repository.IRepository#findOne(long)
 	 */
+	@Override
 	public Agent findOne(long id) {
 		Agent agent = (Agent) currentSession().get(Agent.class, id);
 		if(agent == null){
@@ -76,6 +89,7 @@ public class AgentHibernateRepository implements AgentRepository {
 	 * (non-Javadoc)
 	 * @see be.shoktan.ingressCompagnion.repository.AgentRepository#findByCodename(java.lang.String)
 	 */
+	@Override
 	public Agent findByCodename(String codename) {
 		@SuppressWarnings("unchecked")
 		List<Agent> list = (List<Agent>)currentSession()
@@ -97,6 +111,7 @@ public class AgentHibernateRepository implements AgentRepository {
 	 * (non-Javadoc)
 	 * @see be.shoktan.ingressCompagnion.repository.IRepository#findAll()
 	 */
+	@Override
 	public List<Agent> findAll() {
 		return (List<Agent>) currentSession()
 				.createCriteria(Agent.class).list();
