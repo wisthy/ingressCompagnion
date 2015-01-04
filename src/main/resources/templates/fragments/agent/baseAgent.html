@@ -11,9 +11,16 @@
 			th:src="@{/webjars/jquery/2.1.1/jquery.min.js}"></script>
 </head>
 <body>
-	<fieldset th:fragment="baseAgent">
+
+	
+
+	<fieldset th:fragment="show">
 		<legend th:text="#{agent.section.basic}">Basic info</legend>
-		<a class="quickLink" th:href="@{|/agent/modify/${agent.getCodename()}|}" th:text="#{message.edit}">modify</a>
+		<div th:if="${showActions}">
+			<a class="quickLink" th:href="@{|/agent/modify/${agent.getCodename()}|}" th:text="#{message.update}">modify</a>
+			-
+			<a class="quickLink" th:href="@{|/agent/delete/${agent.getCodename()}|}" th:text="#{message.delete}">delete</a>
+		</div>
 		<ul>
 			<li>
 				<span th:text="#{message.label(#{agent.codename})}">Codename:</span> 
@@ -24,6 +31,14 @@
 				<span th:text="#{|faction.${agent.getFaction()}|}">value</span>
 			</li>
 		</ul>
+	</fieldset>
+	
+	<fieldset th:fragment="delete">
+		<legend th:text="#{section.delete.form}">Delete label goes here</legend>
+		<form method="POST" th:action="@{|/agent/delete/${agent.codename}|}">
+			<input type="submit" value="ok" th:value="#{message.yes}"/>
+			<input type="button" value="ko" th:value="#{message.no}" onclick="redirect()" th:onclick="'window.location.href=\'' + @{|/agent/show/${agent.codename}|} + '\';'"/>
+		</form>
 	</fieldset>
 </body>
 </html>

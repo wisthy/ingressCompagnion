@@ -50,7 +50,16 @@
 					
 					<td th:text="#{|faction.${agent.getFaction()}|}">The best faction</td>
 					<td th:text="${agent.isRegistered()} ? #{message.yes}">Registered?</td>
-					<td><a href="#" th:href="@{|/agent/delete/${agent.codename}|}" th:text="#{action.short.delete}">Bye</a></td>
+					<td>
+						<a th:href="@{|/agent/show/${agent.getCodename()}|}" th:text="#{action.read}">show</a>
+						-
+						<a th:href="@{|/agent/modify/${agent.getCodename()}|}" th:text="#{action.update}">modify</a>
+						-
+						<a th:href="@{|/agent/delete/${agent.codename}|}" th:text="#{action.delete}">Bye</a>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="4"><a href="#" th:href="@{|/agent/add|}" th:text="#{action.create}">Create a new agent</a></td>
 				</tr>
 				
 			</table>

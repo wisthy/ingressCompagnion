@@ -41,10 +41,10 @@
 			<h1 th:text="#{agent.title(${agent.getCodename()})}">Agent
 				profile</h1>
 			<hr></hr>
-			<fieldset th:replace="fragments/delete :: base">
+			<fieldset th:replace="fragments/agent/baseAgent :: delete">
 				Delete confirmation goes here
 			</fieldset>
-			<fieldset th:replace="fragments/agent/baseAgent :: baseAgent">
+			<fieldset th:replace="fragments/agent/baseAgent :: show">
 				Basic Agent info goes there
 			</fieldset>
 			<br></br>

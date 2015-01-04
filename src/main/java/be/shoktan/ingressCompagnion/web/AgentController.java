@@ -96,6 +96,7 @@ public class AgentController {
 			if(logger.isDebugEnabled())logger.debug("agent found: "+agent);
 			model.addAttribute("agent", agent);
 		}
+		model.addAttribute("showActions", true);
 		return "agent_profile";
 	}
 	
@@ -155,21 +156,22 @@ public class AgentController {
 		}
 		
 		model.addAttribute("agent", agent);
+		model.addAttribute("showActions", false);
 		return "agent_delete";
 	}
 	
 	@RequestMapping(value = "/delete/{codename}", method=RequestMethod.POST)
-	public String deleteAgentProcess(@PathVariable String codename, RedirectAttributes model){
+	public String deleteAgentProcess(@PathVariable String codename, RedirectAttributes flashModel, Model model){
 		Agent agent = repository.findByCodename(codename);
-		model.addFlashAttribute("codename", codename);
+		flashModel.addFlashAttribute("codename", codename);
 		
 		if(agent instanceof RegisteredAgent){
-			model.addFlashAttribute("status", "RegisteredAgent");
+			flashModel.addFlashAttribute("status", "RegisteredAgent");
 			return "redirect:/agent/list";
 		}
 		
 		repository.delete(codename);
-		model.addFlashAttribute("status", "deleted");
+		flashModel.addFlashAttribute("status", "deleted");
 		return "redirect:/agent/list";
 	}
 }
